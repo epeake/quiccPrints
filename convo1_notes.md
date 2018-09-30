@@ -17,3 +17,11 @@
   - Preprocess -> IP to turn the photos into something usable
   - some sort of classification needed.  Maybe SVM, mayble CNN (but would we have enough data)?
   
+# 1 min segment scripts
+## time yourself!
+
+Anthony:
+
+Elijah:
+
+Terrance:
