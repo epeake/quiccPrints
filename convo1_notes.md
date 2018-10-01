@@ -15,7 +15,7 @@
   - SQL database
   - Need to build our dataset by taking photos of students' prints, different lighting and conditions
   - Preprocess -> IP to turn the photos into something usable
-  - some sort of classification needed.  Maybe SVM, mayble CNN (but would we have enough data)?
+  - some sort of classification needed.  Maybe multicalss SVM, maybe Multinom Logistic regreesion, mayble CNN (but would we have enough data)?
   
 # 1 min segment scripts
 ## time yourself!
