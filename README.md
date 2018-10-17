@@ -3,7 +3,7 @@
 
 Before:
 
-[[file:///Users/epeake/Sync/Midd/jr/S1/Image%20Processing/Project/finger.JPG]]
+[[https://github.com/epeake/image_to_prints/blob/master/examples/finger.JPG]]
 
 After:
 
