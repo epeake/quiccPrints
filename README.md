@@ -3,4 +3,4 @@
 
 ![Before](https://github.com/epeake/image_to_prints/blob/master/examples/finger.jpeg)
 
-![After](https://github.com/epeake/image_to_prints/blob/master/examples/finger_print.png)
+![After](https://github.com/epeake/image_to_prints/blob/master/examples/fingerPrint.png)
