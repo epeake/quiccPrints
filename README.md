@@ -3,6 +3,6 @@
 
 Takes images of thumbs from an iphone (app currently being developed) and converts them into fingerprint images.  See example below!
 
-![Before](https://github.com/epeake/image_to_prints/blob/master/examples/finger.jpeg)
+![Before](https://github.com/epeake/image_to_prints/blob/master/examples/finger.png)
 
-![After](https://github.com/epeake/image_to_prints/blob/master/examples/fingerPrint.png)
+![After](https://github.com/epeake/image_to_prints/blob/master/examples/finger_print.png)
