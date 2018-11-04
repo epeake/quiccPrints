@@ -7,7 +7,6 @@
 //
 #import <opencv2/opencv.hpp>
 #import "OpenCVWrapper.h"
-#include <string>
 
 using namespace cv;
 using namespace std;
@@ -17,6 +16,74 @@ using namespace std;
 @end
 
 @implementation OpenCVWrapper
+
+
+/*
+converts our UIImage into a Mat for opencv processing
+(taken from https://docs.opencv.org/2.4/doc/tutorials/ios/image_manipulation/image_manipulation.html)
+*/
+- (cv::Mat)cvMatGrayFromUIImage:(UIImage *)image {
+  CGColorSpaceRef colorSpace = CGImageGetColorSpace(image.CGImage);
+  CGFloat cols = image.size.width;
+  CGFloat rows = image.size.height;
+
+  cv::Mat cvMat(rows, cols, CV_8UC1); // 8 bits per component, 1 channels
+
+  CGContextRef contextRef = CGBitmapContextCreate(cvMat.data,                 // Pointer to data
+                                                  cols,                       // Width of bitmap
+                                                  rows,                       // Height of bitmap
+                                                  8,                          // Bits per component
+                                                  cvMat.step[0],              // Bytes per row
+                                                  colorSpace,                 // Colorspace
+                                                  kCGImageAlphaNoneSkipLast |
+                                                  kCGBitmapByteOrderDefault); // Bitmap info flags
+
+  CGContextDrawImage(contextRef, CGRectMake(0, 0, cols, rows), image.CGImage);
+  CGContextRelease(contextRef);
+
+  return cvMat;
+ }
+
+
+ /*
+ converts our Mat back into a UIImage
+ (taken from https://docs.opencv.org/2.4/doc/tutorials/ios/image_manipulation/image_manipulation.html)
+ */ -(UIImage *)UIImageFromCVMat:(cv::Mat)cvMat {
+   NSData *data = [NSData dataWithBytes:cvMat.data length:cvMat.elemSize()*cvMat.total()];
+   CGColorSpaceRef colorSpace;
+
+   if (cvMat.elemSize() == 1) {
+       colorSpace = CGColorSpaceCreateDeviceGray();
+   } else {
+       colorSpace = CGColorSpaceCreateDeviceRGB();
+   }
+
+   CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)data);
+
+   // Creating CGImage from cv::Mat
+   CGImageRef imageRef = CGImageCreate(cvMat.cols,                                 //width
+                                       cvMat.rows,                                 //height
+                                       8,                                          //bits per component
+                                       8 * cvMat.elemSize(),                       //bits per pixel
+                                       cvMat.step[0],                            //bytesPerRow
+                                       colorSpace,                                 //colorspace
+                                       kCGImageAlphaNone|kCGBitmapByteOrderDefault,// bitmap info
+                                       provider,                                   //CGDataProviderRef
+                                       NULL,                                       //decode
+                                       false,                                      //should interpolate
+                                       kCGRenderingIntentDefault                   //intent
+                                       );
+
+
+   // Getting UIImage from CGImage
+   UIImage *finalImage = [UIImage imageWithCGImage:imageRef];
+   CGImageRelease(imageRef);
+   CGDataProviderRelease(provider);
+   CGColorSpaceRelease(colorSpace);
+
+   return finalImage;
+  }
+
 
 // Subtracts the mask from our image (both already cropped and grayscale)
 void maskDifference(Mat image, Mat mask, int valToChangeTo) {
@@ -59,17 +126,15 @@ int main(int argc, char** argv) {
         return -1;
     }
     
+    // NEED TO FIGURE OUT THESE INPUTSSSSSSS
+    Mat image = cvMatGrayFromUIImage(argv[1]);
     // read and crop files
-    Mat image = imread(argv[1], CV_LOAD_IMAGE_GRAYSCALE)(Range(1650,3200), Range(1000,2060));
+    image = image(Range(1650,3200), Range(1000,2060));
     Mat mask = imread(argv[2], CV_LOAD_IMAGE_GRAYSCALE)(Range(1650,3200), Range(1000,2060));
-    
+
     makeMask(image, mask);
     extractPrint(image, mask);
     
-    namedWindow( "Fingerprint", WINDOW_AUTOSIZE); // Create a window for display.
-    imshow( "Fingerprint", image);                // Show our image inside it.
-    
-    waitKey(0);  // Wait for a keystroke in the window
     return 0;
 }
 
