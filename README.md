@@ -5,4 +5,4 @@ Takes images of thumbs from an iphone (app currently being developed) and conver
 
 Original Photo                                                                        |  Extracted Print
 :------------------------------------------------------------------------------------:|:-------------------------:
-![Before](https://github.com/epeake/image_to_prints/blob/master/examples/finger.jpeg)  |  ![After](https://github.com/epeake/image_to_prints/blob/master/examples/print.jpg)
+![Before](https://github.com/epeake/image_to_prints/blob/master/examples/finger.png)  |  ![After](https://github.com/epeake/image_to_prints/blob/master/examples/print.png)
