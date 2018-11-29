@@ -1,0 +1,217 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<title>Image Processing Final</title>
+</head>
+<h1>
+	quiccPrints: Image Processing Final
+</h1>
+
+<p>
+	Terrance Nance, Elijah Peake, Anthony Turcios
+<p>
+
+<h2>
+	Introduction:
+</h2>
+
+<p>
+  quiccPrints gives smartphone users the ability to a photo of a thumb and convert
+it into a fingerprint image.  We were initially motivated to pursue this project
+because of its useful applications to law enforcement.  Many fingerprinting
+devices are large and clunky, some even require an outlet.  In-field police
+officers, however, often face life-or-death situations where it is out of the
+question to be held back by such a device, reguardless of its usefulness.  If
+officers could quickly and easily scan fingerprints and check them in a database,
+they would be able to check for people's past criminal history without the need
+for non-biometric forms of identification.  For simplicity, we designed quiccPrints
+to only focus on capturing thumbprints, but we believe that our software could
+be easily expanded upon to include other fingers.
+</p>
+<p>
+  Although there have been new, more portable fingerprinting devices created to
+satisfy this need, we thought it would be cool to give officers the same ability,
+to fingerprint and check for criminals in a database, with only their cellphone.
+We were especially drawn to creating this functionality with just a smartphone
+because, in the modern day, officers are likely already carrying a smartphone.
+Thus, adding this extra functionality to the smartphone gives them one less thing
+to carry even if there are already more portable fingerprinting devices.
+</p>
+<p>
+  One thing that was consistantly in the back of our minds throughout the project
+was that these fingerprints not only had to be extracted from photos, but extracted
+well enough from these photos so that they sould later be checked in a database.
+It is important to note that such an assessment of fingerprint quality is often
+done by organizations like NIST (the National Institute of Standards and
+Technology), so, due to
+
+</p>
+
+<h2>
+        Methods:
+</h2>
+
+<p>
+kk
+</p>
+
+<h2>
+        Results:
+</h2>
+
+<p>
+kk
+</p>
+
+<h2>
+        Schedule:
+</h2>
+
+<h3>
+  Original Schedule:
+</h3>
+
+<h4>
+  ELIJAH:
+</h4>
+
+<ul>
+  <strong> Week 5 -- 10/9 </strong>
+  <li> Begin developing the edge detection that will be needed for the project (using various IP libraries). </li>
+  <li> Research what technologies will make the edge detection most effective given constraints of input images. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 6 -- 10/16 </strong>
+  <li> Optimize edge detection algorithm and conversion to binary image. </li>
+  <li> Give group update on progress. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 7 -- 10/23 </strong>
+  <li> Begin integrating algorithm with application being built. </li>
+  <li> Help Terrance with feature extraction and classification algorithm building. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 8 -- 10/30 </strong>
+  <li> Tie any loose ends. </li>
+  <li> Evaluate where the project is at this point and decide (as a team) viable options for extending the project in time for the final presentation. </li>
+  <li> 3MT presentation and report. </li>
+</ul>
+
+
+
+<h4>
+  TERRANCE:
+</h4>
+
+<ul>
+    <strong> Week 6 -- 10/16 </strong>
+    <li> Begin researching what makes a thumbprint unique to determine features to be extracted from our thumbprints. </li>
+    <li> Testing on a fingerprint taken by Elijah or on one found online, begin implementing feature extraction. </li>
+    <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+    <strong> Week 7 -- 10/23 </strong>
+    <li> Continue working on feature extraction and start thinking about what classification algorithm we might want to use, given our set of features. </li>
+    <li> Implement a quick and dirty version of the classification algorithm. </li>
+    <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+    <strong> Week 8 -- 10/30 </strong>
+    <li> Optimize the algorithm (time permitting). </li>
+    <li> Integrate with Anthony’s app. </li>
+    <li> 3MT presentation and report. </li>
+    <li> Progress report to the team. </li>
+</ul>
+
+<h4>
+  ANTHONY:
+</h4>
+
+
+
+<ul>
+  <strong> Week 5 -- 10/9 </strong>
+  <li> Begin researching handling camera usage and developing Android mobile application. </li>
+  <li> Research Swift development to (possibly) use better camera quality on iOS devices.</li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 6 -- 10/16 </strong>
+  <li> Set up the environment for taking photos (Android). </li>
+  <li> Look into camera and internet permissions for Android devices. </li>
+  <li> Successfully get the phone to at least take an image and send to computer (any of ours). </li>
+  <li> (Possibly) Get the image to be sent to a DB? </li>
+  <li> Begin researching how camera can force user to take image of thumb within a thumb outline. </li>
+  <li> Like cashing a check via bank app. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 7 -- 10/23 </strong>
+  <li> Begin to implement a way of forcing the user to place their thumb into certain region. </li>
+  <li> Consider using flash to get this done. </li>
+  <li> Possibly go through current code and refactor where applicable. </li>
+  <li> Work on formal project progress report (due the following week). </li>
+  <li> This includes the 3MT. </li>
+</ul>
+
+<ul>
+  <strong> Week 8 -- 10/30 </strong>
+  <li> 3MT presentation and report. </li>
+  <li> Check in with team on next steps for project depending on how much has gotten done. </li>
+</ul>
+
+<h2>
+        Issues:
+</h2>
+
+<p>
+kk
+</p>
+
+<h2>
+        Future Work:
+</h2>
+
+<p>
+  Although you likely could collect fingerprints from fingers other than thumbs
+with the current software, the software has been optimized to work only with
+thumbprints.  If we were given more time, we would like to add this additional
+functionality.
+</p>
+
+<p>
+  Also, as briefly mentioned earlier, we currently have no evaluation metric of
+fingerprint quality, and would likely have to consult an outside agency like
+NIST to do so.  This would be another importent future step to take because,
+although we can often successfully collect thumbprints with the software, we
+currently have no understanding of whether the prints would be considered good
+or not.
+</p>
+
+<p>
+  Connected to asessing fingerprint quality, we would ultamately like to give
+users the ability to not only take fingerprints from their cellphones, but also
+then send the prints to a database to be checked for a match.  This was originally
+a key part of our application, but due to the difficulty involved with developing
+an iphone app without previous experience and developing a unique fingerprint
+extraction algorithm, we faced significant setbacks.
+</p>
+
+<h2>
+        References:
+</h2>
+
+<p>
+kk
+</p>
+</html>
