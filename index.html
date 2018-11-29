@@ -11,8 +11,10 @@
 	Terrance Nance, Elijah Peake, Anthony Turcios
 <p>
 
+<div style="text-align: center;">
 <img src="finger.jpeg" alt="Finger" style="width:700px;height:500px;">
 <img src="print.jpg" alt="Print" style="width:350px;height:500px;">
+</div>
 
 <h2>
 	Introduction:
@@ -111,9 +113,22 @@ same distance because this lead to the best performance.
 <h3>
   Anthony:
 </h3>
-<p>
-kk
-</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp; Given that our project revolves around the use of mobile cameras, I decided that I would be using my personal Android device to develop the user interface and backend for the mobile app. I started the development process by designing the various classes that were necessary to work with the Android's hardware. This was necessary because the android SDK is written in Java (so an object oriented design is necessary). Since the device I was working on was an HTC One that was running  <a href="#something">Ice Cream Sandwich</a>, I had to work with a deprecated camera API. After designing the classes and the way that they would interact with each other I began implementing the live camera preview (as would be standard on any mobile device) and the view holder that would display the camera.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp; I had to consider that there was not a great deal of space on my Android's hardware so I refrained from storing captured images. Given this consideration, I had to introduce external storage via a database. So, I used the built in support for Firebase to hold onto images that would have otherwise been in the camera's memory.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp; The last piece of the applicaiton lied in the method of sending the image. However, this is also where many issues arose in the Android version of the application. It turned out that the devices was attempting to compress the image, even though it was not being stored in memory. The likely cause was that trying to send the image to the database was resulting in compression of the image, but when this happened the quality of the image became horrible. To combat this I did implement custom settings for when to atuofocus but there was not much help there.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp; The previous issues lead to the use of an iOS application. This was mostly because the hardware behind the iPhone camera API is much more powerful. I was not familiar with the iOS development workflow but when researching the practices that iOS developers use when buidling applications, I found that it was nearly identical to the methodologies used in Android development. The biggest hurdle in taking on an iOS version of the application became the need to either learn Objective-C of Swift. I found that Swift was far simpler to understand and was similar to JavaScript so I decided to rebuild the application using Swift and the XCode IDE. At this point the challenge became figuring out the various analogs of the custom camera components in the Android application for the iOS application. Fortunately the documentation and other developer's questions on Stack Overflow helped me figure out how to meet our teams needs.</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp; The iOS application makes use of the, very flexible, AVFoundation framework. There are other frameworks that are available for using the camera on an iOS device, but this one gave me the most control while not requiring me to write ridiculous amounts of code for the functionality. I decided that the actual interface should be simple enough for anyone to be able to pick up the device and utilize the application. To make the processing of a caputred image easier I added an overlay to the live preview for the application. The overlay is an outline of a generic thumb that is in bright green. There are two majors parts ot the interface: the first is the live preview and the second is the captured image preview. The live preview consits of a button to actually capture the image. The image preview consists of an buttons that allow for sending the image to a server or returning to the previous view.</p>
+
+<p>The workflow is shown best in the following diagram:</p>
+
+<div style="text-align: center;">
+  <img src="https://i.pinimg.com/originals/0e/eb/56/0eeb5635ca8ddd32fa3244da56fd46f7.png" style="width:600px;height:600px;">
+</div>
 
 <h2>
   Results:
