@@ -7,9 +7,9 @@
 	quiccPrints: Image Processing Final
 </h1>
 
-<p>
+<h2>
 	Terrance Nance, Elijah Peake, Anthony Turcios
-<p>
+<h2>
 
 <div style="text-align: center;">
 <img src="finger.jpeg" alt="Finger" style="width:700px;height:500px;">
@@ -77,7 +77,7 @@ algorithm to determine several key statistics of each fingerprint.
 &nbsp;&nbsp;&nbsp;&nbsp; My task was to implement feature extraction. In order words, finding a way to describe the contents of the thumbprints that Elijah gave to me. Therefore, I read through different scholarly articles that discussed the best ways to implement feature extraction. I primarily consulted this source for my research: <a href="https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf"> https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf </a>
 </p>
 <p>
-&nbsp;&nbsp;&nbsp;&nbsp;  As I mentioned earlier, to complete this task, I first decided to conduct some research of my own to find the best approach to take for feature extraction. I read through different scholarly articles that discussed the best ways to implement feature extraction. Once I found a couple of different approaches, I began testing and implementing the different approaches using jupyter notebook. I quickly realized that the Crossing Number Concept was the best algorithm to use. One reason I liked this algorithm is because the function was pretty straightforward to implement. It uses a 3x3 sliding window to scan the local neighborhood (Figure 3). It performs this operation on the outside pixels and returns the value (Figure 4). I can use this chart (Figure 5) to determine what type of point (Figure 6) the center pixel represents. For my actual feature extraction function, I decided to explicitly have variables to represent each position in the 3x3 sliding window because it made the function a lot easier to understand. It also made the operation performed on the outside neighbors clearer and easier to understand because originally, I ran into a lot of problems trying to condense the size of the overall feature extraction method. I successfully implemented this Crossing Number Concept algorithm so that we can now use this algorithm to output a new grayscale image, where the brighter pixels have higher CN values and darker pixels have lower CN values. As a result, we now know the locations of the different types of points. The algorithm I implemented also outputs the total counts of each type of point that are in the given image. I also added a portion to this algorithm that outputs a color image instead of grayscale image where each different type of point represents a different color, so we can better see the results from the algorithm. Since we modified the app so that we only have the top portion/actual thumbprint (Figure 2), I decided that we did not need to add a post-processing element to the algorithm. I stand firm with this decision because now we are only performing operations on the actual thumbprint, instead of the other entire thumb with the extra noisy features (Figure 1). So now our results do not get interfered and we consistently get the same final total counts of each type of point. The only libraries for this process that are used are skimage and matplotlib.
+&nbsp;&nbsp;&nbsp;&nbsp;  For figures, <a href="terrance_figures.pdf"> click here <a/>.  As I mentioned earlier, to complete this task, I first decided to conduct some research of my own to find the best approach to take for feature extraction. I read through different scholarly articles that discussed the best ways to implement feature extraction. Once I found a couple of different approaches, I began testing and implementing the different approaches using jupyter notebook. I quickly realized that the Crossing Number Concept was the best algorithm to use. One reason I liked this algorithm is because the function was pretty straightforward to implement. It uses a 3x3 sliding window to scan the local neighborhood (Figure 3). It performs this operation on the outside pixels and returns the value (Figure 4). I can use this chart (Figure 5) to determine what type of point (Figure 6) the center pixel represents. For my actual feature extraction function, I decided to explicitly have variables to represent each position in the 3x3 sliding window because it made the function a lot easier to understand. It also made the operation performed on the outside neighbors clearer and easier to understand because originally, I ran into a lot of problems trying to condense the size of the overall feature extraction method. I successfully implemented this Crossing Number Concept algorithm so that we can now use this algorithm to output a new grayscale image, where the brighter pixels have higher CN values and darker pixels have lower CN values. As a result, we now know the locations of the different types of points. The algorithm I implemented also outputs the total counts of each type of point that are in the given image. I also added a portion to this algorithm that outputs a color image instead of grayscale image where each different type of point represents a different color, so we can better see the results from the algorithm. Since we modified the app so that we only have the top portion/actual thumbprint (Figure 2), I decided that we did not need to add a post-processing element to the algorithm. I stand firm with this decision because now we are only performing operations on the actual thumbprint, instead of the other entire thumb with the extra noisy features (Figure 1). So now our results do not get interfered and we consistently get the same final total counts of each type of point. The only libraries for this process that are used are skimage and matplotlib.
 
 </p>
 
@@ -85,15 +85,15 @@ algorithm to determine several key statistics of each fingerprint.
   Elijah:
 </h3>
 <p>
-&nbsp;&nbsp;&nbsp;&nbsp; When I originally started trying to extract a thumbprint for an image, I realized
-that I was faced with not only the task of extracting the thumbprint, but also cropping
-the image to the thumbprint.  The latter proved to be far more challenging.  Before I could do anything,
-I needed to compile a database of people's fingerprints.  To do so, I went to several of my
-friends and asked for their consent to take photos of their thumbs, which would be anonymized, to
-improve a fingerprint detection algorithm.  I made sure to not only collect fingerprints of students
-with a single shade of skin.  I collected thumb photos from frineds of all races, so that performance
-would not be biased to a certain race.  All photos were collected with the flash on at roughly the
-same distance because this lead to the best performance.
+  &nbsp;&nbsp;&nbsp;&nbsp; When I originally started trying to extract a thumbprint for an image, I realized
+  that I was faced with not only the task of extracting the thumbprint, but also cropping
+  the image to the thumbprint.  The latter proved to be far more challenging.  Before I could do anything,
+  I needed to compile a database of people's fingerprints.  To do so, I went to several of my
+  friends and asked for their consent to take photos of their thumbs, which would be anonymized, to
+  improve a fingerprint detection algorithm.  I made sure to not only collect fingerprints of students
+  with a single shade of skin.  I collected thumb photos from frineds of all races, so that performance
+  would not be biased to a certain race.  All photos were collected with the flash on at roughly the
+  same distance because this lead to the best performance.
 </p>
 <p>
   &nbsp;&nbsp;&nbsp;&nbsp; Once I collected the photos, to extract the fingerprint, all I needed to do was use
@@ -107,14 +107,14 @@ same distance because this lead to the best performance.
   except for the fingerprint (described below).
 </p>
 <p>
-  To
+
 </p>
 
 <h3>
   Anthony:
 </h3>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp; Given that our project revolves around the use of mobile cameras, I decided that I would be using my personal Android device to develop the user interface and backend for the mobile app. I started the development process by designing the various classes that were necessary to work with the Android's hardware. This was necessary because the android SDK is written in Java (so an object oriented design is necessary). Since the device I was working on was an HTC One that was running  <a href="#something">Ice Cream Sandwich</a>, I had to work with a deprecated camera API. After designing the classes and the way that they would interact with each other I began implementing the live camera preview (as would be standard on any mobile device) and the view holder that would display the camera.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; Given that our project revolves around the use of mobile cameras, I decided that I would be using my personal Android device to develop the user interface and backend for the mobile app. I started the development process by designing the various classes that were necessary to work with the Android's hardware. This was necessary because the android SDK is written in Java (so an object oriented design is necessary). Since the device I was working on was an HTC One that was running  <a href="https://www.androidauthority.com/how-to-install-android-4-0-ice-cream-sandwich-on-htc-desire-s-46402/">Ice Cream Sandwich</a>, I had to work with a deprecated camera API. After designing the classes and the way that they would interact with each other I began implementing the live camera preview (as would be standard on any mobile device) and the view holder that would display the camera.</p>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp; I had to consider that there was not a great deal of space on my Android's hardware so I refrained from storing captured images. Given this consideration, I had to introduce external storage via a database. So, I used the built in support for Firebase to hold onto images that would have otherwise been in the camera's memory.</p>
 
@@ -138,14 +138,26 @@ same distance because this lead to the best performance.
   Terrance:
 </h3>
 <p>
-kk
+For results, <a href="terrance_results.pdf"> click here </a>
 </p>
 
 <h3>
   Elijah:
 </h3>
 <p>
-kk
+&nbsp;&nbsp;&nbsp;&nbsp; I would say that in the end, the algorithm tends to perform
+well.  One thing that I was really happy with is the fact that the algorithm
+tends to be able to correctly extract the thumbprint and create a nice mask so that
+we only output the thumbprint regardless of similar backgrounds around the thumb.
+You can see an example of what I mean at the top of the page.  Regardless of the
+similar background surrounding the thumb, we are able to extract only the thumb's print.
+This is thanks to the fact that we are taking into account spatial frequency, not just luminosity
+values when we are trying to find the thumb.  As said earlier, we use sine waves and convulutions
+to detect regions of high spatial frequency (like a fingerprint), and use that to distingush where
+the thumb is.  Unfortunately, most often the algorithm will also take a print of parts of the thumb that
+not concidered a thumbprint.  For example, the algorithm will often notice the high freqencies of the
+base of the thumb and turn that into a finger print as well as, or sometimes instead of the thumbprint.
+For an example of this, see Terrance's <a href="terrance_figures.pdf"> Figure 1 <a/>.
 </p>
 
 <h3>
@@ -363,7 +375,21 @@ in the end we ended up creating software that I am proud of.
 </h3>
 
 <p>
-NONE WE DA BEST
+&nbsp;&nbsp;&nbsp;&nbsp; As said before, we ran into several issues trying to convert
+the python code into Objective-C++ to be integrated into the application.  In the end,
+as said before, we ended up abandoning ship and just sending all the code to be processes
+on an external server with Python so that I did not hav to keep translating my code between languages.
+Also, implementation wise, I would say that I experienced my most significant issues trying to automatically crop the images
+taken by the phone to just include the thumb.  This would have likely been much easier to do with a CNN, but given that
+we did not have a massive dataset of thumbs with boxes around them, I resorted to image processing techniques.  In the end,
+my efforts proved unsecessful.  To get around the cropping issue, we added a box on the camera preview for people to stick their
+thumbs into before the photo was taken.  This way we could just crop around the box and not have to worry about the thumb's lostaion
+in the image.  Also, as said earlier, we still have the issue where we sometimes do not correctly identify
+a thumb region and instead will think that the base of a thumb should be included in the thumbprint because of its
+high frequency.  This, however, I think is expected, that the algorithm is imperfect, because it is extremely
+difficult to generallize such an algorithm without extensive training data or the help of more modern
+methods of machine learning.  Lastly, I would also say that the last issue that I want to highlight is the issue of time.
+Our project was incredibly ambitious so the entire time we definitely felt a strong time crunch.
 </p>
 
 <h3>
