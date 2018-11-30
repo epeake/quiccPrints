@@ -107,24 +107,49 @@ algorithm to determine several key statistics of each fingerprint.
   except for the fingerprint (described below).
 </p>
 <p>
-
+  &nbsp;&nbsp;&nbsp;&nbsp; In order to make the mask, I first converted the image to grayscale, and used the mask
+  overlayed on the app's preview sceen to crop the image.  Afterwards, I used histogram
+  equalization to stretch out the luminosity.  I noticed that this emphasized the outline of the thumb, which
+  made detecting the thumb reigon much easier.  Afterwards, I used a heavy median filter to denoise the image while
+  still maintaining the edges.  Afterwards, we use another local thresholding on this new smoothed image because
+  I noticed that it helps seperate regions in the image.  I did notice, however, that changinging the hyperparameters
+  slighty changed the regions that would later be captured with a region detector, as provided by skimage.measure.
+  Thus, I spereated a series of locally thresholded images into several region seperated images.  I stored these
+  labeled images in memory then came back to them later.  In the meantime, I needed to figure out a way to automactically
+  choose the thumbprint region of these labeled images to make a mask with.  In order to choose the region, I used six high
+  frequency sign wave windows and convolved them with the original cropped image.  I could have used a Gabor filter,
+  but I realized that having the sine wave contained to only a portion of the window to convolve with made it so that
+  frequencies were less emphasized when we did the convolutions.  That is, the output image was a much more uniform gray.
+  With these high frequency sign waves, however, the output convolved images all have bright patches around where the fingerprint
+  was, where there was very high frequency.  Thus, we made a separate image by taking the OR of all of these convolved images
+  which we then overlayed with each of our region images that was stored in memory.  This way, we could then choose the region that
+  contained the most bright pixels in the high frequency overlay image.  That is, we choose the region that has the highest spacial
+  frequency, which should be the thumbprint, especially becuase everyhting that is not in the foreground gets a little blurred out.
+  Therefore, we are able to sucessfully choose the region that countains a thumb, reguardless of a similarly colored background.  After
+  we have chosen each of these masks, we then overlayed them with one another to make a new mask using the OR operation, and then
+  we used the binary closing operation to fill in any holes.  Finally, we use an erosion filter to tighten the mask to the thumb outline and
+  we take to difference of the mask and our output fingerprint to crop it accordingly.
 </p>
 
 <h3>
   Anthony:
 </h3>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp; Given that our project revolves around the use of mobile cameras, I decided that I would be using my personal Android device to develop the user interface and backend for the mobile app. I started the development process by designing the various classes that were necessary to work with the Android's hardware. This was necessary because the android SDK is written in Java (so an object oriented design is necessary). Since the device I was working on was an HTC One that was running  <a href="https://www.androidauthority.com/how-to-install-android-4-0-ice-cream-sandwich-on-htc-desire-s-46402/">Ice Cream Sandwich</a>, I had to work with a deprecated camera API. After designing the classes and the way that they would interact with each other I began implementing the live camera preview (as would be standard on any mobile device) and the view holder that would display the camera.</p>
+<p> &nbsp;&nbsp;&nbsp;&nbsp; Given that our project revolves around the use of mobile cameras, I decided that I would be using my personal Android device to develop the user interface and backend for the mobile app. I started the development process by designing the various classes that were necessary to work with the Android's hardware. This was necessary because the android SDK is written in Java (so an object oriented design is necessary). Since the device I was working on was an HTC One that was running  <a href="https://www.androidauthority.com/how-to-install-android-4-0-ice-cream-sandwich-on-htc-desire-s-46402/">Ice Cream Sandwich</a>, I had to work with a deprecated camera API. After designing the classes and the way that they would interact with each other I began implementing the live camera preview (as would be standard on any mobile device) and the view holder that would display the camera. </p>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp; I had to consider that there was not a great deal of space on my Android's hardware so I refrained from storing captured images. Given this consideration, I had to introduce external storage via a database. So, I used the built in support for Firebase to hold onto images that would have otherwise been in the camera's memory.</p>
+<p> &nbsp;&nbsp;&nbsp;&nbsp; I had to consider that there was not a great deal of space on my Android's hardware so I refrained from storing captured images. Given this consideration, I had to introduce external storage via a database. So, I used the built in support for Firebase to hold onto images that would have otherwise been in the camera's memory. </p>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp; The last piece of the applicaiton lied in the method of sending the image. However, this is also where many issues arose in the Android version of the application. It turned out that the devices was attempting to compress the image, even though it was not being stored in memory. The likely cause was that trying to send the image to the database was resulting in compression of the image, but when this happened the quality of the image became horrible. To combat this I did implement custom settings for when to atuofocus but there was not much help there.</p>
+<p> &nbsp;&nbsp;&nbsp;&nbsp; The last piece of the applicaiton lied in the method of sending the image. However, this is also where many issues arose in the Android version of the application. It turned out that the devices was attempting to compress the image, even though it was not being stored in memory. The likely cause was that trying to send the image to the database was resulting in compression of the image, but when this happened the quality of the image became horrible. To combat this I did implement custom settings for when to atuofocus but there was not much help there. </p>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp; The previous issues lead to the use of an iOS application. This was mostly because the hardware behind the iPhone camera API is much more powerful. I was not familiar with the iOS development workflow but when researching the practices that iOS developers use when buidling applications, I found that it was nearly identical to the methodologies used in Android development. The biggest hurdle in taking on an iOS version of the application became the need to either learn Objective-C of Swift. I found that Swift was far simpler to understand and was similar to JavaScript so I decided to rebuild the application using Swift and the XCode IDE. At this point the challenge became figuring out the various analogs of the custom camera components in the Android application for the iOS application. Fortunately the documentation and other developer's questions on Stack Overflow helped me figure out how to meet our teams needs.</p>
+<p> &nbsp;&nbsp;&nbsp;&nbsp; The previous issues lead to the use of an iOS application. This was mostly because the hardware behind the iPhone camera API is much more powerful. I was not familiar with the iOS development workflow but when researching the practices that iOS developers use when buidling applications, I found that it was nearly identical to the methodologies used in Android development. The biggest hurdle in taking on an iOS version of the application became the need to either learn Objective-C of Swift. I found that Swift was far simpler to understand and was similar to JavaScript so I decided to rebuild the application using Swift and the XCode IDE. At this point the challenge became figuring out the various analogs of the custom camera components in the Android application for the iOS application. Fortunately the documentation and other developer's questions on Stack Overflow helped me figure out how to meet our teams needs. </p>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp; The iOS application makes use of the, very flexible, AVFoundation framework. There are other frameworks that are available for using the camera on an iOS device, but this one gave me the most control while not requiring me to write ridiculous amounts of code for the functionality. I decided that the actual interface should be simple enough for anyone to be able to pick up the device and utilize the application. To make the processing of a caputred image easier I added an overlay to the live preview for the application. The overlay is an outline of a generic thumb that is in bright green. There are two majors parts ot the interface: the first is the live preview and the second is the captured image preview. The live preview consits of a button to actually capture the image. The image preview consists of an buttons that allow for sending the image to a server or returning to the previous view.</p>
+<p> &nbsp;&nbsp;&nbsp;&nbsp; The iOS application makes use of the, very flexible, AVFoundation framework. There are other frameworks that are available for using the camera on an iOS device, but this one gave me the most control while not requiring me to write ridiculous amounts of code for the functionality. I decided that the actual interface should be simple enough for anyone to be able to pick up the device and utilize the application. To make the processing of a caputred image easier I added an overlay to the live preview for the application. The overlay is an outline of a generic thumb that is in bright green. There are two majors parts ot the interface: the first is the live preview and the second is the captured image preview. The live preview consits of a button to actually capture the image. The image preview consists of an buttons that allow for sending the image to a server or returning to the previous view. </p>
 
-<p>The workflow is shown best in the following diagram:</p>
+<p> &nbsp;&nbsp;&nbsp;&nbsp; The iOS application makes use of the, very flexible, AVFoundation framework. There are other frameworks that are available for using the camera on an iOS device, but this one gave me the most control while not requiring me to write ridiculous amounts of code for the functionality. I decided that the actual interface should be simple enough for anyone to be able to pick up the device and utilize the application. To make the processing of a caputred image easier I added an overlay to the live preview for the application. The overlay is an outline of a generic thumb that is in bright green. There are two majors parts ot the interface: the first is the live preview and the second is the captured image preview. The live preview consits of a button to actually capture the image. The image preview consists of an buttons that allow for sending the image to a server or returning to the previous view. Lastly, we decided to run a Node.js server that would recieve the images from the phone and process them with Python code. This was done to make our lives a little easier but also because of the simplicity that goes behind creating an express application. To get the python code to run in Node, we had to create a process for the algorithm to run in.</p>
+
+
+<p> The workflow is shown best in the following diagram: </p>
+
 
 <div style="text-align: center;">
   <img src="https://i.pinimg.com/originals/0e/eb/56/0eeb5635ca8ddd32fa3244da56fd46f7.png" style="width:600px;height:600px;">
@@ -138,7 +163,7 @@ algorithm to determine several key statistics of each fingerprint.
   Terrance:
 </h3>
 <p>
-For results, <a href="terrance_results.pdf"> click here </a>
+For results, <a href="terrance_results.pdf"> click here. </a>
 </p>
 
 <h3>
@@ -157,15 +182,17 @@ to detect regions of high spatial frequency (like a fingerprint), and use that t
 the thumb is.  Unfortunately, most often the algorithm will also take a print of parts of the thumb that
 not concidered a thumbprint.  For example, the algorithm will often notice the high freqencies of the
 base of the thumb and turn that into a finger print as well as, or sometimes instead of the thumbprint.
-For an example of this, see Terrance's <a href="terrance_figures.pdf"> Figure 1 <a/>.
+For an example of this, see Terrance's <a href="terrance_figures.pdf"> Figure 1. <a/>
 </p>
 
 <h3>
   Anthony:
 </h3>
-<p>
-kk
-</p>
+
+<h1>THE APP WORKS - IMAGES GO IN THIS SECTION</h1>
+
+<p>The images above consist of the the interface for the live preview (figure 1) and the output of hitting the capture button (figure 2). The image on the far right demonstrates the statistical analysis of the print that was taken.</p>
+
 
 <h2>
   Schedule:
@@ -358,6 +385,46 @@ in the end we ended up creating software that I am proud of.
   Actual Schedule:
 </h4>
 
+<ul>
+  <strong> Week 5 -- 10/9 </strong>
+  <li> Did research on the Android camera API and the components necessary to work with images. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 6 -- 10/16 </strong>
+  <li> Used Android Studio IDE to develop </li>
+  <li> Looked into permissions that were required to use camera on Android. </li>
+  <li> Able to get the phone to at least take an image . </li>
+  <li> Researched methods to achieve an overlay. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 7 -- 10/23 </strong>
+  <li> Attempted to fix quality of output images. </li>
+  <li> Implemented DB to store images in place of internal phone storage. </li>
+  <li> Worked on formal project progress report (due the following week) and 3MT. </li>
+</ul>
+
+<ul>
+  <strong> Week 8 -- 10/30 </strong>
+  <li> 3MT presentation and report. </li>
+  <li> Decided with team to implement an iOS application instead. </li>
+  <li> Began looking into Swift tutorials and setting up XCode environment. </li>
+</ul>
+
+<ul>
+  <strong> Week 9 -- 11/6 </strong>
+  <li> Began implementing custom camera application using AVFoundation framework. </li>
+  <li> Layed out the user interface on the XCode Story board. </li>
+</ul>
+
+<ul>
+  <strong> Week 10 -- 11/15 </strong>
+  <li>Did not work on the project :(</li>
+</ul>
+
 <h2>
   Issues:
 </h2>
@@ -396,9 +463,14 @@ Our project was incredibly ambitious so the entire time we definitely felt a str
   Anthony:
 </h3>
 
-<p>
-NONE WE DA BEST
-</p>
+<p> &nbsp;&nbsp;&nbsp;&nbsp; The biggest issue that I ran into occurred in the first few stages of testing the Android Application. When the app was fully built I attempted to collect images of various objects around me and I found that the quality of the image being sent to the preview layer of the application was horrible. There were a few adjustments that I made to the autofocusing but android really tries to compress images. Interestingly enough the methods used by the Android architecture to compress data is how they are able to keep the phones relatively inexpensive. Regardless this was an issue for our project and there was too much information being lost when attempting to capture an image. Not to mention that the image required fine details in order to have the IP algorithm to process is correctly. </p>
+
+<p> &nbsp;&nbsp;&nbsp;&nbsp; Another initial set back was the lack of storage on the Android device. Storing an image is expensive when considering the limited resources on the phone. And I decided to use external storage instead (i.e. a database). The challenge with this was finding a way to send the bytes to the database in a way that did not result in lossy compression. However, as with the previous issue, the device will automatically do this when trying to pass data around. </p>
+
+<p> &nbsp;&nbsp;&nbsp;&nbsp; The next issue that came up occurred during the iOS development. While the quality of the images being produced were great there was still a need to send them to be processed by the Algorithm that was written in Python. The actual issue here is that there would be a decent amount of latency when getting a response from the Algorithm because the computations were happenning on a difference maching. We did experiment with having all of the openCV code on the app but this task was not tractable. </p>
+
+<p> &nbsp;&nbsp;&nbsp;&nbsp; The final issue arose when trying to process the images from the Node.js server. There was a ton of work that went into resolving dependencies and setting up the environment so that the IP libraries were actually being loaded into the python script. </p>
+
 
 <h2>
   Future Work:
@@ -429,6 +501,8 @@ an iphone app without previous experience and developing a unique fingerprint
 extraction algorithm, we faced significant setbacks.
 </p>
 
+<p>Lastly, given more time we would love to figure out how to get the iOS application to do all of the work that we have spread across the phone and the serever. Ideally this would be an application that would do all of the image processing instantly (or as quickly as possible).</p>
+
 <h2>
   References:
 </h2>
@@ -444,5 +518,22 @@ extraction algorithm, we faced significant setbacks.
 <a href="https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf"> https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf </a>
 <br>
 <br>
-
+<a href="https://docs.swift.org/swift-book/">Swift Programming Book</a>
+<br>
+<br>
+<a href="https://developer.apple.com/documentation/avfoundation">AVFoundation</a>
+<br>
+<br>
+<a href="https://www.raywenderlich.com/464-storyboards-tutorial-for-ios-part-1">XCode Story board Tutorial</a>
+<br>
+<br>
+<a href="https://docs.swift.org/swift-book/LanguageGuide/ClassesAndStructures.html">Swift Classes and Strcutres</a>
+<br>
+<br>
+<a href="https://codewithchris.com/xcode-tutorial/">XCode Tutorial</a>
+<br>
+<br>
+<a href="https://zaiste.net/nodejs-child-process-spawn-exec-fork-async-await/">Running Python Process in Node Server</a>
+<br>
+<br>
 </html>
