@@ -89,7 +89,7 @@ def extract_print(mask, imgray):
 
 if __name__ == "__main__":
     # os.chdir("/Users/epeake/Sync/Midd/jr/S1/Image Processing/Project")
-    imgray = cv.imread(sys.argv[1], cv.IMREAD_GRAYSCALE)    # WHATEVER THE WINDOW IS "bel.jpg", [1000:3000, 1000:2300]
+    imgray = cv.imread(sys.argv[1], cv.IMREAD_GRAYSCALE)[1500:3000, 1000:2000]
     imgray_eq = ske.equalize_hist(imgray)
     med = skfill.median(imgray_eq, selem=skmorph.disk(21))
     f_print = extract_print(thresh_series_mask(med, imgray), imgray)
