@@ -1,11 +1,10 @@
-//
+/
 //  ViewController.swift
 //  quiccPrintsV2
 //
 //  Created by Anthony Turcios on 11/4/18.
 //  Copyright © 2018 Anthony Turcios. All rights reserved.
 //
-
 import UIKit
 import AVFoundation
 
@@ -60,12 +59,18 @@ class ViewController: UIViewController {
         camPrevLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
         camPrevLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
         camPrevLayer?.frame = self.view.frame
-        let xCor = self.view.frame.origin.x
-        let yCor = self.view.frame.origin.y
-        let overlayImView = UIImageView(image: UIImage(named: "Image.png"))
+//        let xCor = 0
+//        let yCor = 0
+        let overlayImView = UIImageView(frame: self.view.bounds)
+        overlayImView.image = UIImage(named: "Image.png")
 //        print(overlayImView.frame.height)
 //        print(overlayImView.frame.width)
-        overlayImView.frame = CGRect(x: xCor, y: yCor, width: 700, height: 800)
+//        overlayImView.frame = CGRect(x: CGFloat(xCor), y: CGFloat(yCor), width: CGFloat(overlayImView.frame.width/10), height: CGFloat(overlayImView.frame.height/10))
+        overlayImView.contentMode = .scaleAspectFit
+        
+//        print(overlayImView.frame.height)
+//        print(overlayImView.frame.width)
+        
         self.view.addSubview(overlayImView)
         self.view.layer.insertSublayer(camPrevLayer!, at: 0)
     }
@@ -82,6 +87,28 @@ class ViewController: UIViewController {
         if segue.identifier == "showPhotoSegue" {
             let prevVC = segue.destination as! PrevViewController
             prevVC.image = self.image 
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touchP = touches.first
+        let screenSize = self.view.bounds.size
+        let x = touchP!.location(in: self.view).y / screenSize.height
+        let y = 1.0 - (touchP?.location(in: self.view).x)!/screenSize.width
+        let focPoint = CGPoint(x: x, y: y)
+
+        if let dev = backCam {
+            do {
+                try dev.lockForConfiguration()
+                
+                dev.focusPointOfInterest = focPoint
+                dev.focusMode = .autoFocus
+                dev.exposurePointOfInterest = focPoint
+                dev.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
+                dev.unlockForConfiguration()
+            } catch {
+                print(error)
+            }
         }
     }
 
