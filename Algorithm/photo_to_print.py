@@ -9,11 +9,17 @@ import sys
 
 
 def sin2d(u, v, ii, jj, N, M):
+    """
+    Makes our high frequency sine waves
+    """
     selem = np.sin(u * ii / (2 * np.pi) + v * jj / (2 * np.pi))
     return selem * 255 / (N * M)
 
 
 def high_freq_detection(imgray):
+    """
+    Creates new image to detect regions
+    """
     N = 200
     M = 200
     i = np.linspace(0, N - 1, N)
@@ -41,6 +47,9 @@ def high_freq_detection(imgray):
 
 
 def thresh_series_mask(median_img, imgray):
+    """
+    Find all regions
+    """
     block_sizes = [21, 41, 51, 61, 81]
     masks = []
     for block_size in block_sizes:
@@ -77,6 +86,9 @@ def thresh_series_mask(median_img, imgray):
 
 
 def extract_print(mask, imgray):
+    """
+    Get print, given the mask
+    """
     imgray[mask != 1] = 0
     block_size = 41
     local_thresh = skfill.threshold_local(imgray, block_size)
