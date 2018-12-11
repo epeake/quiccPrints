@@ -39,7 +39,7 @@
     </p>
     <p>
       &nbsp;&nbsp;&nbsp;&nbsp; One thing that was consistently in the back of our minds throughout the project was that these fingerprints not only had to be extracted from photos, but extracted well enough from these photos so that they should
-      later be checked in a database. It is important to note that such an assessment of fingerprint quality is often measured by organizations like NIST (the National Institute of Standards and Technology) [1], so, due to time constraints and
+      later be checked in a database. It is important to note that such an assessment of fingerprint quality is often measured by assessment algorithms developed by organizations like NIST (the National Institute of Standards and Technology) [1], so, due to time constraints and
       resources, we were unable to assess the prints' quality.
     </p>
     <p>
@@ -65,12 +65,11 @@
       Terrance:
     </h3>
     <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; My task was to implement feature extraction. In order words, finding a way to describe the contents of the thumbprints that Elijah gave to me. Therefore, I read through different scholarly articles that discussed the
-      best ways to implement feature extraction. I primarily consulted this source for my research: <a href="https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf">
-        https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf </a>
+      &nbsp;&nbsp;&nbsp;&nbsp; My task was to implement feature extraction. In order words, finding a way to describe the content of the thumbprints that Elijah gave to me. Therefore, I read through different scholarly articles that discussed the
+      best ways to implement feature extraction. I primarily consulted this source for my research: <a href="https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf"> [5]</a>
     </p>
     <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; For figures, <a href="terrance_figures.pdf"> click here <a />. As I mentioned earlier, to complete this task, I first decided to conduct some research of my own to find the best approach to take for feature extraction.
+      &nbsp;&nbsp;&nbsp;&nbsp; For figures, taken from [5] unless otherwise specified, <a href="terrance_figures.pdf"> click here <a />. As I mentioned earlier, to complete this task, I first decided to conduct some research of my own to find the best approach to take for feature extraction.
         I read through different scholarly articles that discussed the best ways to implement feature extraction. Once I found a couple of different approaches, I began testing and implementing the different approaches using jupyter notebook. I
         quickly realized that the Crossing Number Concept was the best algorithm to use. One reason I liked this algorithm is because the function was pretty straightforward to implement. It uses a 3x3 sliding window to scan the local neighborhood
         (Figure 3). It performs this operation on the outside pixels and returns the value (Figure 4). I can use this chart (Figure 5) to determine what type of point (Figure 6) the center pixel represents. For my actual feature extraction function,
@@ -80,7 +79,7 @@
         counts of each type of point that are in the given image. I also added a portion to this algorithm that outputs a color image instead of grayscale image where each different type of point represents a different color, so we can better see
         the results from the algorithm. Since we modified the app so that we only have the top portion/actual thumbprint (Figure 2), I decided that we did not need to add a post-processing element to the algorithm. I stand firm with this decision
         because now we are only performing operations on the actual thumbprint, instead of the other entire thumb with the extra noisy features (Figure 1). So now our results do not get interfered and we consistently get the same final total counts
-        of each type of point. The only libraries for this process that are used are skimage and matplotlib.
+        of each type of point. The only libraries for this process that are used are skimage [2] and matplotlib [4].
 
     </p>
 
@@ -325,6 +324,23 @@
       <li> THANKSGIVING BREAK (so I did not work on the project). </li>
     </ul>
 
+    <ul>
+      <strong> Week 12 – 11/25 </strong>
+      <li> I helped Anthony and Elijah send the image to our server. </li>
+    </ul>
+
+    <ul>
+      <strong> Week 13 – 12/2 </strong>
+      <li> I worked with Anthony and Elijah to finish last minute touches in order to get ready for the presentation. </li>
+      <li> We presented our semester long results to the class. </li>
+    </ul>
+
+    <ul>
+      <strong> Week 14 – 12/9 </strong>
+      <li> I worked with Anthony and Elijah to clean up the draft report. </li>
+      <li> We submited our final code and report. </li>
+    </ul>
+
     <h3>
       Anthony:
     </h3>
@@ -419,13 +435,14 @@
     </h3>
 
     <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; Originally, when we first divided up the work amongst the three of us. I was originally tasked with coming up with object detection. After a few days and feelings of frustration, we decided that we did not need object
-      detection, since the app was going to take a square image centered around the thumb in the middle. This did not affect my schedule too much since this happened very early on in the semester. Additionally, when I was first trying to implement
-      feature extraction, I ran into a problem when it was trying to thin the image. Initially I did not know how to thin a thumbprint, so I did some research to learn how to actually thin an image. I eventually noticed that under skimage morphology
-      there is a thin operation that outputs the desired skeleton image and I began using that operation to output the thinned thumbprint images. Luckily, it only took me a few days to find this solution. Unfortunately, I later ran into another
-      problem when I was trying make my feature extraction algorithm run faster because at the time I had made separate functions for extracting features, printing the statistics and showing the cool color images. I was able to fix this by having
-      one function that has completes all these tasks more efficiently. This function has parameters so that the user can put either true or false if they want certain options such as printing the statistics or showing the color images that
-      represents the different types of points.
+      &nbsp;&nbsp;&nbsp;&nbsp; In the beginning, when we first divided up the work amongst the three of us. I was originally tasked with coming up with object detection. After a few days and feelings of frustration, we decided that we did not need
+      object detection, since the app was going to take a square image centered around the thumb in the middle. This did not affect my schedule too much since this happened very early on in the semester. Additionally, when I was first trying to
+      implement feature extraction, I ran into a problem when it was trying to thin the image. I needed to thin the image because it erodes away the foreground pixels until they are one pixel wide. It creates a skeleton image that the feature
+      extraction algorithm needs as input to run properly. Initially I did not know how to thin a thumbprint, so I did some research to learn how to actually thin an image. I eventually noticed that under skimage morphology there is a thin operation
+      that
+      outputs the desired skeleton image and I began using that operation to output the thinned thumbprint images. Luckily, it only took me a few days to find this solution. Unfortunately, I later ran into another problem when I was trying make my
+      feature extraction algorithm run faster because at the time, I had separate functions for extracting features, printing the statistics and showing the cool color images. I was able to fix this by having one function that to complete all these
+      tasks. This function has parameters so that the user can input either true or false if they want certain options such as printing the statistics or showing the color images that represents the different types of points.
     </p>
 
     <h3>
@@ -475,7 +492,7 @@
     </p>
 
     <p>
-      &nbsp;&nbsp;&nbsp;&nbsp;     Also, as briefly mentioned earlier, we currently have no evaluation metric of fingerprint quality, and would likely have to consult an outside agency like NIST to do so. This would be another important future step
+      &nbsp;&nbsp;&nbsp;&nbsp;     Also, as briefly mentioned earlier, we currently have no evaluation metric of fingerprint quality, and would likely have to consult an outside agency like NIST or use one of their quality assessment algorithms to do so. This would be another important future step
       to take because, although we can often successfully collect thumbprints with the software, we currently have no understanding of whether the prints would be considered good or not.
     </p>
 
@@ -501,13 +518,13 @@
     <a href="https://opencv.org/"> [3] OpenCV </a>
     <br>
     <br>
-    <a href="https://matplotlib.org/"> Matplotlib </a>
+    <a href="https://matplotlib.org/"> [4] Matplotlib </a>
     <br>
     <br>
-    <a href="https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf"> https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf </a>
+    <a href="https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf"> [5] https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf </a>
     <br>
     <br>
-    <a href="https://docs.swift.org/swift-book/">Swift Programming Book</a>
+    <a href="https://docs.swift.org/swift-book/"> Swift Programming Book</a>
     <br>
     <br>
     <a href="https://developer.apple.com/documentation/avfoundation">AVFoundation</a>
