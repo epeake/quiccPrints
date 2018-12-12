@@ -5,20 +5,36 @@
 //  Created by Anthony Turcios on 11/4/18.
 //  Copyright © 2018 Anthony Turcios. All rights reserved.
 //
-
 import UIKit
 import Alamofire
 
+
+/*
+* The PrevViewController essentially extends the UIViewController Class
+* and will be used to display the image that was captured during the camera
+* preview session.
+*
+* Since we are using an express server for handling the images, I made use of the Almofire library 
+* to handle the put request to send data.
+*/
 class PrevViewController: UIViewController {
     
     var image: UIImage!
-    @IBOutlet weak var photo: UIImageView!
+    @IBOutlet weak var photo: UIImageView! 
     let activityIndicator:UIActivityIndicatorView = UIActivityIndicatorView()
     
+    /*
+    * Event listener for the back button,
+    * when pressed return to live preview
+    */
     @IBAction func backButton(_ sender: Any) {
       Loader.instance.hide_loader()
       dismiss(animated: true, completion: nil)
     }
+    /*
+    * Event listener for the process button
+    * when pressed uplaod image to server for processing
+    */
     @IBAction func processButton(_ sender: Any) {
       Loader.instance.show_loader()
       upload(image: self.image)
@@ -29,16 +45,18 @@ class PrevViewController: UIViewController {
       photo.image = self.image
     }
    
-   // upload image to node js server and compress! otherwise there is too much latency
+
+    /*
+    * First rotates the image so that the server ahs the same portrait view that
+    * the app gave the user
+    */
    func upload(image: UIImage) {
       //first reorient the image to be portrait
       let rotate_img = imageOrientation(image)
       guard let data = rotate_img.jpegData(compressionQuality: 0.9) else {
          return
       }
-      
-      
-      //upload the image
+      //upload the image as a put request
       Alamofire.upload(multipartFormData: { (form) in
          form.append(data, withName: "file", fileName: "file.jpg", mimeType: "image/jpg")
       }, to: "https://quicc-prints-aturc.c9users.io/images", encodingCompletion: { result in
@@ -52,32 +70,21 @@ class PrevViewController: UIViewController {
              print(encodingError)
          }
       })
-      
-      //now make the request for information on the image
-//      Alamofire.request("https://httpbin.org/result").responseJSON { response in
-//         print("Request: \(String(describing: response.request))")   // original url request
-//         print("Response: \(String(describing: response.response))") // http url response
-//         print("Result: \(response.result)")                         // response serialization result
-//
-//         if let json = response.result.value {
-//            print("JSON: \(json)") // serialized json response
-//         }
-//
-//         if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
-//            print("Data: \(utf8Text)") // original server data as UTF8 string
-//         }
-//      }
-
    }
    
+    /*
+    * After the image has been processed, the server will send a response with the 
+    * statistics on the the thumb print
+    * Show user using an alert popup
+    * 
+    * The string returned from the server has a ton of extra characters that are sent in the response like '\n'
+    * '#'
+    */
    func createAlert(message: String) {
       let split_message: [String] = message.components(separatedBy: "\\n")
       let indexStartOfText = split_message[0].index(split_message[0].startIndex, offsetBy: 1)
-      
       let new_message = split_message[0][indexStartOfText...] + "\n" + split_message[1] + "\n" + split_message[2] + "\n" + split_message[3] + "\n" + split_message[4] + "\n"
-      
       let paddedString = new_message.leftJustified(width: 5)
-//      print(new_message)
       let alert = UIAlertController(title: "About Your Print", message: paddedString, preferredStyle: UIAlertController.Style.alert)
       alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { (action) in
             alert.dismiss(animated: true, completion: nil)
@@ -86,12 +93,18 @@ class PrevViewController: UIViewController {
       self.present(alert, animated: true, completion: nil)
    }
    
-   // transform the image so that when it is sent, it is still in portrait mode
+   /*
+    * In many cases the image will not have the same portrait orientaiton as the user is seeing,
+    * this implies that when the server saves the image it will be rotated.
+    */
    func imageOrientation(_ src:UIImage)->UIImage {
+      // if the orientation is corrent stop
       if src.imageOrientation == UIImage.Orientation.up {
          return src
       }
       var transform: CGAffineTransform = CGAffineTransform.identity
+
+      // find which orientation the image has and transform it appropriately
       switch src.imageOrientation {
          case UIImage.Orientation.down, UIImage.Orientation.downMirrored:
             transform = transform.translatedBy(x: src.size.width, y: src.size.height)
@@ -108,7 +121,8 @@ class PrevViewController: UIViewController {
          case UIImage.Orientation.up, UIImage.Orientation.upMirrored:
             break
       }
-      
+
+      // post processing, ensure that the scaling is also correct
       switch src.imageOrientation {
          case UIImage.Orientation.upMirrored, UIImage.Orientation.downMirrored:
             transform.translatedBy(x: src.size.width, y: 0)
@@ -139,21 +153,9 @@ class PrevViewController: UIViewController {
       
       return img
    }
-    
-//    func saveToCameraRoll() {
-//         UIImageWriteToSavedPhotosAlbum(photo.image!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-//    }
-//
-//    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-//        if let error = error {
-//            // we got back an error!
-//            let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
-//            ac.addAction(UIAlertAction(title: "OK", style: .default))
-//            present(ac, animated: true)
-//        }
-//    }
 }
 
+// my attempt to add a method to the string class to allow for left justification of text
 extension String {
    func leftJustified(width: Int, truncate: Bool = false) -> String {
       guard width > count else {
