@@ -45,6 +45,7 @@ class PrevViewController: UIViewController {
       photo.image = self.image
     }
    
+
     /*
     * First rotates the image so that the server ahs the same portrait view that
     * the app gave the user
@@ -102,6 +103,7 @@ class PrevViewController: UIViewController {
          return src
       }
       var transform: CGAffineTransform = CGAffineTransform.identity
+
       // find which orientation the image has and transform it appropriately
       switch src.imageOrientation {
          case UIImage.Orientation.down, UIImage.Orientation.downMirrored:
@@ -119,6 +121,7 @@ class PrevViewController: UIViewController {
          case UIImage.Orientation.up, UIImage.Orientation.upMirrored:
             break
       }
+
       // post processing, ensure that the scaling is also correct
       switch src.imageOrientation {
          case UIImage.Orientation.upMirrored, UIImage.Orientation.downMirrored:
@@ -161,3 +164,4 @@ extension String {
       return self + String(repeating: " ", count: width - count)
    }
 }
+

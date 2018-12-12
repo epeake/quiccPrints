@@ -73,7 +73,6 @@ class ViewController: UIViewController {
         let overlayImView = UIImageView(frame: self.view.bounds)
         overlayImView.image = UIImage(named: "Image.png")
         overlayImView.contentMode = .scaleAspectFit
-        
         self.view.addSubview(overlayImView)
         self.view.layer.insertSublayer(camPrevLayer!, at: 0)
     }
