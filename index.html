@@ -11,536 +11,551 @@
 
 <h2>
   Terrance Nance, Elijah Peake, Anthony Turcios
-  <h2>
-
-    <div style="text-align: center;">
-      <img src="finger.jpeg" alt="Finger" style="width:700px;height:500px;">
-      <img src="print.jpg" alt="Print" style="width:350px;height:500px;">
-    </div>
-
-    <h2>
-      Introduction:
-    </h2>
-
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; quiccPrints gives smartphone users the ability to take a photo of a thumb and convert it into a fingerprint image. We were initially motivated to pursue this project because of its useful applications to law
-      enforcement. Many fingerprinting devices are large and clunky, some even require an outlet. In-field police officers, however, often face life-or-death situations where it is out of the question to be held back by such a device, regardless of
-      its usefulness. If officers could quickly and easily scan fingerprints and check them in a database, they would be able to check for people's past criminal history without the need for non-biometric forms of identification. For simplicity, we
-      designed quiccPrints to only focus on capturing thumbprints, but we believe that our software could be easily expanded upon to include other fingers.
-    </p>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; Although there have been new, more portable fingerprinting devices created to
-      satisfy this need, we thought it would be cool to give officers the same ability,
-      to fingerprint and check for criminals in a database, with only their cellphones.
-      We were especially drawn to creating this functionality with just a smartphone
-      because, in the modern day, officers are likely already carrying a smartphone.
-      Thus, adding this extra functionality to the smartphone gives them one less thing
-      to carry even if there are already more portable fingerprinting devices.
-    </p>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; One thing that was consistently in the back of our minds throughout the project was that these fingerprints not only had to be extracted from photos, but extracted well enough from these photos so that they should
-      later be checked in a database. It is important to note that such an assessment of fingerprint quality is often measured by assessment algorithms developed by organizations like NIST (the National Institute of Standards and Technology) [1], so, due to time constraints and
-      resources, we were unable to assess the prints' quality.
-    </p>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; Due to the large volume of work involved in the project,
-      each member of our team was assigned a certain group of subtasks that would
-      countribute to our overall goal of extracting fingerprints. Because we were unable
-      to create a data base for our prints and to check for existing prints in the database
-      due to time constraints, we decided to, instead, output several statistics of interest
-      for each of our output fingerprints. Thus, the divided subtasks were as follows:
-      create a smartphone application to take the photos to be processed; devise an
-      algorithm that can take in photos and output fingerprint images; devise an
-      algorithm to determine several key statistics of each fingerprint.
-    </p>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp;
-    </p>
-
-    <h2>
-      Methods:
-    </h2>
-
-    <h3>
-      Terrance:
-    </h3>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; My task was to implement feature extraction. In order words, finding a way to describe the content of the thumbprints that Elijah gave to me. Therefore, I read through different scholarly articles that discussed the
-      best ways to implement feature extraction. I primarily consulted this source for my research: <a href="https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf"> [5]</a>
-    </p>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; For figures, taken from [5] unless otherwise specified, <a href="terrance_figures.pdf"> click here <a />. As I mentioned earlier, to complete this task, I first decided to conduct some research of my own to find the best approach to take for feature extraction.
-        I read through different scholarly articles that discussed the best ways to implement feature extraction. Once I found a couple of different approaches, I began testing and implementing the different approaches using jupyter notebook. I
-        quickly realized that the Crossing Number Concept was the best algorithm to use. One reason I liked this algorithm is because the function was pretty straightforward to implement. It uses a 3x3 sliding window to scan the local neighborhood
-        (Figure 3). It performs this operation on the outside pixels and returns the value (Figure 4). I can use this chart (Figure 5) to determine what type of point (Figure 6) the center pixel represents. For my actual feature extraction function,
-        I decided to explicitly have variables to represent each position in the 3x3 sliding window because it made the function a lot easier to understand. It also made the operation performed on the outside neighbors clearer and easier to
-        understand because originally, I ran into a lot of problems trying to condense the size of the overall feature extraction method. I successfully implemented this Crossing Number Concept algorithm so that we can now use this algorithm to
-        output a new grayscale image, where the brighter pixels have higher CN values and darker pixels have lower CN values. As a result, we now know the locations of the different types of points. The algorithm I implemented also outputs the total
-        counts of each type of point that are in the given image. I also added a portion to this algorithm that outputs a color image instead of grayscale image where each different type of point represents a different color, so we can better see
-        the results from the algorithm. Since we modified the app so that we only have the top portion/actual thumbprint (Figure 2), I decided that we did not need to add a post-processing element to the algorithm. I stand firm with this decision
-        because now we are only performing operations on the actual thumbprint, instead of the other entire thumb with the extra noisy features (Figure 1). So now our results do not get interfered and we consistently get the same final total counts
-        of each type of point. The only libraries for this process that are used are skimage [2] and matplotlib [4].
-
-    </p>
-
-    <h3>
-      Elijah:
-    </h3>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp;      When I originally started trying to extract a thumbprint for an image, I realized that I was faced with not only the task of extracting the thumbprint, but also cropping the image to the thumbprint. The latter
-      proved to be far more challenging. Before I could do anything, I needed to compile a database of people's fingerprints. To do so, I went to several of my friends and asked for their consent to take photos of their thumbs, which would be
-      anonymized, to improve a fingerprint detection algorithm. I made sure to not only collect fingerprints of students with a single shade of skin. I collected thumb photos from friends of all races, so that performance would not be biased to a
-      certain race. All photos were collected with the flash on at roughly the same distance because this lead to the best performance.
-    </p>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp;      Once I collected the photos, to extract the fingerprint, all I needed to do was use local thresholding, with hyper-parameters tuned based its performance on several thumbprint photos. Local thresholding works by
-      thresholding an image based on luminosity values within a certain window instead of based on the entire image. This was helpful for extracting fingerprints because the peaks of the fingers tend to be brighter than the valleys. This way, if we
-      set all the values of the bright peaks to zero and all the values of the valley to one, we can get a fingerprint. The only thing that needed to be done after this point was to use a median filter to get rid of any noise residuals in the photo
-      (to clean up the image), and to use a mask to crop out everything in the photo except for the fingerprint (described below).
-    </p>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp;      In order to make the mask, I first converted the image to grayscale, and used the mask overlaid on the app's preview screen to crop the image. Afterwards, I used histogram equalization to stretch out the
-      luminosity. I noticed that this emphasized the outline of the thumb, which made detecting the thumb region much easier. Afterwards, I used a heavy median filter to denoise the image while still maintaining the edges. Afterwards, we use another
-      local thresholding on this new smoothed image because I noticed that it helps separate the regions of the image. I did notice, however, that changing the hyper-parameters slightly changed the regions that would later be captured with a region
-      detector, as provided by skimage.measure [2]. Thus, I separated a series of locally thresholded images into several region separated images. I stored these labeled images in memory then came back to them later. In the meantime, I needed to
-      figure out a way to automatically choose the thumbprint region of these labeled images to make a mask with. In order to choose the region, I used six high frequency sign wave windows and convolved them with the original cropped image. I could
-      have used a Gabor filter, but I realized that having the sine wave contained to only a portion of the window to convolve with made it so that frequencies were less emphasized when we did the convolutions. That is, the output image was a much
-      more uniform gray. With these high frequency sign waves, however, the output convolved images all have bright patches around where the fingerprint was, where there was very high frequency. Thus, we made a separate image by taking the OR of all
-      of these convolved images which we then overlaid with each of our region images that was stored in memory. This way, we could then choose the region that contained the most bright pixels in the high frequency overlay image. That is, we choose
-      the region that has the highest spacial frequency, which should be the thumbprint, especially because everything that is not in the foreground gets a little blurred out. Therefore, we are able to successfully choose the region that contains a
-      thumb, regardless of a similarly colored background. After we have chosen each of these masks, we then overlaid them with one another to make a new mask using the OR operation, and then we used the binary closing operation to fill in any
-      holes. Finally, we use an erosion filter to tighten the mask to the thumb outline and we take to difference of the mask and our output fingerprint to crop it accordingly. To see images of the process, taken from our presentation, <a href="ipprocess.pdf">
-        click here </a>
-    </p>
-
-    <h3>
-      Anthony:
-    </h3>
-
-    <p> &nbsp;&nbsp;&nbsp;&nbsp; Given that our project revolves around the use of mobile cameras, I decided that I would be using my personal Android device to develop the user interface and backend for the mobile app. I started the development
-      process by designing the various classes that were necessary to work with the Android's hardware. This was necessary because the android SDK is written in Java (so an object oriented design is necessary). Since the device I was working on was
-      an HTC One that was running <a href="https://www.androidauthority.com/how-to-install-android-4-0-ice-cream-sandwich-on-htc-desire-s-46402/">Ice Cream Sandwich</a>, I had to work with a deprecated camera API. After designing the classes and the
-      way that they would interact with each other I began implementing the live camera preview (as would be standard on any mobile device) and the view holder that would display the camera. </p>
-
-    <p> &nbsp;&nbsp;&nbsp;&nbsp; I had to consider that there was not a great deal of space on my Android's hardware so I refrained from storing captured images. Given this consideration, I had to introduce external storage via a database. So, I
-      used the built in support for Firebase to hold onto images that would have otherwise been in the camera's memory. </p>
-
-    <p> &nbsp;&nbsp;&nbsp;&nbsp; The last piece of the applicaiton lied in the method of sending the image. However, this is also where many issues arose in the Android version of the application. It turned out that the devices was attempting to
-      compress the image, even though it was not being stored in memory. The likely cause was that trying to send the image to the database was resulting in compression of the image, but when this happened the quality of the image became horrible.
-      To combat this I did implement custom settings for when to atuofocus but there was not much help there. </p>
-
-    <p> &nbsp;&nbsp;&nbsp;&nbsp; The previous issues lead to the use of an iOS application. This was mostly because the hardware behind the iPhone camera API is much more powerful. I was not familiar with the iOS development workflow but when
-      researching the practices that iOS developers use when buidling applications, I found that it was nearly identical to the methodologies used in Android development. The biggest hurdle in taking on an iOS version of the application became the
-      need to either learn Objective-C of Swift. I found that Swift was far simpler to understand and was similar to JavaScript so I decided to rebuild the application using Swift and the XCode IDE. At this point the challenge became figuring out
-      the various analogs of the custom camera components in the Android application for the iOS application. Fortunately the documentation and other developer's questions on Stack Overflow helped me figure out how to meet our teams needs. </p>
-
-    <p> &nbsp;&nbsp;&nbsp;&nbsp; The iOS application makes use of the, very flexible, AVFoundation framework. There are other frameworks that are available for using the camera on an iOS device, but this one gave me the most control while not
-      requiring me to write ridiculous amounts of code for the functionality. I decided that the actual interface should be simple enough for anyone to be able to pick up the device and utilize the application. To make the processing of a caputred
-      image easier I added an overlay to the live preview for the application. The overlay is an outline of a generic thumb that is in bright green. There are two majors parts ot the interface: the first is the live preview and the second is the
-      captured image preview. The live preview consits of a button to actually capture the image. The image preview consists of an buttons that allow for sending the image to a server or returning to the previous view. </p>
-
-    <p> &nbsp;&nbsp;&nbsp;&nbsp; The iOS application makes use of the, very flexible, AVFoundation framework. There are other frameworks that are available for using the camera on an iOS device, but this one gave me the most control while not
-      requiring me to write ridiculous amounts of code for the functionality. I decided that the actual interface should be simple enough for anyone to be able to pick up the device and utilize the application. To make the processing of a caputred
-      image easier I added an overlay to the live preview for the application. The overlay is an outline of a generic thumb that is in bright green. There are two majors parts ot the interface: the first is the live preview and the second is the
-      captured image preview. The live preview consits of a button to actually capture the image. The image preview consists of an buttons that allow for sending the image to a server or returning to the previous view. Lastly, we decided to run a
-      Node.js server that would recieve the images from the phone and process them with Python code. This was done to make our lives a little easier but also because of the simplicity that goes behind creating an express application. To get the
-      python code to run in Node, we had to create a process for the algorithm to run in.</p>
-
-
-    <p> The workflow is shown best in the following diagram: </p>
-
-
-    <div style="text-align: center;">
-      <img src="https://i.pinimg.com/originals/0e/eb/56/0eeb5635ca8ddd32fa3244da56fd46f7.png" style="width:600px;height:600px;">
-    </div>
-
-    <h2>
-      Results:
-    </h2>
-
-    <h3>
-      Terrance:
-    </h3>
-    <p>
-      For results, <a href="terrance_results.pdf"> click here. </a>
-    </p>
-
-    <h3>
-      Elijah:
-    </h3>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; I would say that in the end, the algorithm tends to perform well. One thing that I was really happy with is the fact that the algorithm tends to be able to correctly extract the thumbprint and create a nice mask so
-      that we only output the thumbprint regardless of similar backgrounds around the thumb. You can see an example of what I mean at the top of the page. Regardless of the similar background surrounding the thumb, we are able to extract only the
-      thumb's print. This is thanks to the fact that we are taking into account spatial frequency, not just luminosity values when we are trying to find the thumb. As said earlier, we use sine waves and convolutions to detect regions of high spatial
-      frequency (like a fingerprint), and use that to distinguish where the thumb is. Unfortunately, most often the algorithm will also take a print of parts of the thumb that not considered a thumbprint. For example, the algorithm will often notice
-      the high frequencies of the base of the thumb and turn that into a finger print as well as, or sometimes instead of the thumbprint. For an example of this, see Terrance's <a href="terrance_figures.pdf"> Figure 1. <a />
-    </p>
-
-    <h3>
-      Anthony:
-    </h3>
-
-    <h1>THE APP WORKS - IMAGES GO IN THIS SECTION</h1>
-
-    <p>The images above consist of the the interface for the live preview (figure 1) and the output of hitting the capture button (figure 2). The image on the far right demonstrates the statistical analysis of the print that was taken.</p>
-
-
-    <h2>
-      Schedule:
-    </h2>
-
-    <h3>
-      Elijah:
-    </h3>
-
-    <h4>
-      Original Schedule:
-    </h4>
-
-    <ul>
-      <strong> Week 5 -- 10/9 </strong>
-      <li> Begin developing the edge detection that will be needed for the project (using various IP libraries). </li>
-      <li> Research what technologies will make the edge detection most effective given constraints of input images. </li>
-      <li> Progress report to the team. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 6 -- 10/16 </strong>
-      <li> Optimize edge detection algorithm and conversion to binary image. </li>
-      <li> Give group update on progress. </li>
-      <li> Progress report to the team. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 7 -- 10/23 </strong>
-      <li> Begin integrating algorithm with application being built. </li>
-      <li> Help Terrance with feature extraction and classification algorithm building. </li>
-      <li> Progress report to the team. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 8 -- 10/30 </strong>
-      <li> Tie any loose ends. </li>
-      <li> Evaluate where the project is at this point and decide (as a team) viable options for extending the project in time for the final presentation. </li>
-      <li> 3MT presentation and report. </li>
-    </ul>
-
-    <h4>
-      Actual Schedule:
-    </h4>
-
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; Task wise, I followed the original schedule closely; timeline wise, I did not. I am very fortunate that we gave ourselves a several week pad at the end of the project timeline to close any loose ends. I lost a good
-      deal of time trying to translate all my work into Objective-C++ so that we could integrate my OpenCV [3] code into the iphone app, but we never actually ended up integrating all the code because we realize it cost too much time. Although it
-      would have been nice to have all the image processing done locally, having all the code run on an external server proved easiest task. It was especially helpful because throughout the process, I ended up changing my algorithm a lot. C++,
-      however, is not the best language for prototyping, so I would prototype in Python, then translate to C++. Additionally, with C++ I could not use the skimage [2] library, which I ended up using extensively.
-    </p>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; Aside from this issue, I also ended up spending a lot of time just developing
-      my algorithm. I spent countless hours just playing around with all the tools
-      that we learned in class, like blurring, histogram equalization, edge detection,
-      masking, etc. Although I originally planned on finishing the algorithm in the first
-      two weeks, it ended up taking the entire ~6 weeks to complete. Part of the
-      reason it took so long was because as we progressed through the course, I kept
-      learning new tools that I wanted to integrate with the algorithm to make it
-      more robust.
-    </p>
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; A last thing to note is that I never actually helped out
-      Terrance with his feature extraction task because I became too bogged down with my
-      own tasks. Overall, this reflects the our work flow throughout the whole
-      development process: we made ambitious goals at the start, did not complete
-      everything we originally wanted too, but kept reassessing goals along the way and
-      in the end we ended up creating software that I am proud of.
-    </p>
-
-
-    <h3>
-      Terrance:
-    </h3>
-
-    <h4>
-      Original Schedule:
-    </h4>
-
-
-    <ul>
-      <strong> Week 6 -- 10/16 </strong>
-      <li> Begin researching what makes a thumbprint unique to determine features to be extracted from our thumbprints. </li>
-      <li> Testing on a fingerprint taken by Elijah or on one found online, begin implementing feature extraction. </li>
-      <li> Progress report to the team. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 7 -- 10/23 </strong>
-      <li> Continue working on feature extraction and start thinking about what classification algorithm we might want to use, given our set of features. </li>
-      <li> Implement a quick and dirty version of the classification algorithm. </li>
-      <li> Progress report to the team. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 8 -- 10/30 </strong>
-      <li> Optimize the algorithm (time permitting). </li>
-      <li> Integrate with Anthony’s app. </li>
-      <li> 3MT presentation and report. </li>
-      <li> Progress report to the team. </li>
-    </ul>
-
-    <h4>
-      Actual Schedule:
-    </h4>
-
-    <ul>
-      <strong> Week 6 -- 10/16 </strong>
-      <li> I did not work on the project.
-    </ul>
-
-    <ul>
-      <strong> Week 7 -- 10/23 </strong>
-      <li> I began researching what makes a thumbprint unique to determine features to be extracted from our thumbprints. </li>
-      <li> I began experimenting the feature extraction methods in scholarly articles with the the thumbprints that Elijah gave me. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 8 -- 10/30 </strong>
-      <li> I successfully implemented the feature extraction algorithm using the Crossing Number Concept. </li>
-      <li> It outputted the image with new grayscale image, where the brighter pixels have higher CN values and darker pixels have lower CN values. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 9 -- 11/7 </strong>
-      <li> I added a portion to this algorithm that outputs a color image instead of grayscale image where each different type of point represents a different color, so we can better see the results from the algorithm. </li>
-      <li> I started working on making the algorithm more efficient. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 10 – 11/11 </strong>
-      <li> I came up the faster function that extracted features, printed the statistics, show the different images. </li>
-      <li> With the help of Anthony and Elijah, we began integrating my code with Anthony’s app. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 11 – 11/18 </strong>
-      <li> THANKSGIVING BREAK (so I did not work on the project). </li>
-    </ul>
-
-    <ul>
-      <strong> Week 12 – 11/25 </strong>
-      <li> I helped Anthony and Elijah send the image to our server. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 13 – 12/2 </strong>
-      <li> I worked with Anthony and Elijah to finish last minute touches in order to get ready for the presentation. </li>
-      <li> We presented our semester long results to the class. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 14 – 12/9 </strong>
-      <li> I worked with Anthony and Elijah to clean up the draft report. </li>
-      <li> We submited our final code and report. </li>
-    </ul>
-
-    <h3>
-      Anthony:
-    </h3>
-
-    <h4>
-      Original Schedule:
-    </h4>
-
-    <ul>
-      <strong> Week 5 -- 10/9 </strong>
-      <li> Begin researching handling camera usage and developing Android mobile application. </li>
-      <li> Research Swift development to (possibly) use better camera quality on iOS devices.</li>
-      <li> Progress report to the team. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 6 -- 10/16 </strong>
-      <li> Set up the environment for taking photos (Android). </li>
-      <li> Look into camera and internet permissions for Android devices. </li>
-      <li> Successfully get the phone to at least take an image and send to computer (any of ours). </li>
-      <li> (Possibly) Get the image to be sent to a DB? </li>
-      <li> Begin researching how camera can force user to take image of thumb within a thumb outline. </li>
-      <li> Like cashing a check via bank app. </li>
-      <li> Progress report to the team. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 7 -- 10/23 </strong>
-      <li> Begin to implement a way of forcing the user to place their thumb into certain region. </li>
-      <li> Consider using flash to get this done. </li>
-      <li> Possibly go through current code and refactor where applicable. </li>
-      <li> Work on formal project progress report (due the following week). </li>
-      <li> This includes the 3MT. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 8 -- 10/30 </strong>
-      <li> 3MT presentation and report. </li>
-      <li> Check in with team on next steps for project depending on how much has gotten done. </li>
-    </ul>
-
-    <h4>
-      Actual Schedule:
-    </h4>
-
-    <ul>
-      <strong> Week 5 -- 10/9 </strong>
-      <li> Did research on the Android camera API and the components necessary to work with images. </li>
-      <li> Progress report to the team. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 6 -- 10/16 </strong>
-      <li> Used Android Studio IDE to develop </li>
-      <li> Looked into permissions that were required to use camera on Android. </li>
-      <li> Able to get the phone to at least take an image . </li>
-      <li> Researched methods to achieve an overlay. </li>
-      <li> Progress report to the team. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 7 -- 10/23 </strong>
-      <li> Attempted to fix quality of output images. </li>
-      <li> Implemented DB to store images in place of internal phone storage. </li>
-      <li> Worked on formal project progress report (due the following week) and 3MT. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 8 -- 10/30 </strong>
-      <li> 3MT presentation and report. </li>
-      <li> Decided with team to implement an iOS application instead. </li>
-      <li> Began looking into Swift tutorials and setting up XCode environment. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 9 -- 11/6 </strong>
-      <li> Began implementing custom camera application using AVFoundation framework. </li>
-      <li> Layed out the user interface on the XCode Story board. </li>
-    </ul>
-
-    <ul>
-      <strong> Week 10 -- 11/15 </strong>
-      <li>Did not work on the project :(</li>
-    </ul>
-
-    <h2>
-      Issues:
-    </h2>
-
-    <h3>
-      Terrance:
-    </h3>
-
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; In the beginning, when we first divided up the work amongst the three of us. I was originally tasked with coming up with object detection. After a few days and feelings of frustration, we decided that we did not need
-      object detection, since the app was going to take a square image centered around the thumb in the middle. This did not affect my schedule too much since this happened very early on in the semester. Additionally, when I was first trying to
-      implement feature extraction, I ran into a problem when it was trying to thin the image. I needed to thin the image because it erodes away the foreground pixels until they are one pixel wide. It creates a skeleton image that the feature
-      extraction algorithm needs as input to run properly. Initially I did not know how to thin a thumbprint, so I did some research to learn how to actually thin an image. I eventually noticed that under skimage morphology there is a thin operation
-      that
-      outputs the desired skeleton image and I began using that operation to output the thinned thumbprint images. Luckily, it only took me a few days to find this solution. Unfortunately, I later ran into another problem when I was trying make my
-      feature extraction algorithm run faster because at the time, I had separate functions for extracting features, printing the statistics and showing the cool color images. I was able to fix this by having one function that to complete all these
-      tasks. This function has parameters so that the user can input either true or false if they want certain options such as printing the statistics or showing the color images that represents the different types of points.
-    </p>
-
-    <h3>
-      Elijah:
-    </h3>
-
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp;      As said before, we ran into several issues trying to convert the python code into Objective-C++ to be integrated into the application. In the end, as said before, we ended up abandoning ship and just sending all
-      the code to be processes on an external server with Python so that I did not hav to keep translating my code between languages. Also, implementation wise, I would say that I experienced my most significant issues trying to automatically crop
-      the images taken by the phone to just include the thumb. This would have likely been much easier to do with a CNN, but given that we did not have a massive dataset of thumbs with boxes around them, I resorted to image processing techniques. In
-      the end, my efforts proved unsuccessful. To get around the cropping issue, we added a box on the camera preview for people to stick their thumbs into before the photo was taken. This way we could just crop around the box and not have to worry
-      about the thumb's location in the image. Also, as said earlier, we still have the issue where we sometimes do not correctly identify a thumb region and instead will think that the base of a thumb should be included in the thumbprint because of
-      its high frequency. This, however, I think is expected, that the algorithm is imperfect, because it is extremely difficult to generalize such an algorithm without extensive training data or the help of more modern methods of machine learning.
-      Lastly, I would also say that the last issue that I want to highlight is the issue of time. Our project was incredibly ambitious so the entire time we definitely felt a strong time crunch.
-    </p>
-
-    <h3>
-      Anthony:
-    </h3>
-
-    <p> &nbsp;&nbsp;&nbsp;&nbsp; The biggest issue that I ran into occurred in the first few stages of testing the Android Application. When the app was fully built I attempted to collect images of various objects around me and I found that the
-      quality of the image being sent to the preview layer of the application was horrible. There were a few adjustments that I made to the autofocusing but android really tries to compress images. Interestingly enough the methods used by the
-      Android architecture to compress data is how they are able to keep the phones relatively inexpensive. Regardless this was an issue for our project and there was too much information being lost when attempting to capture an image. Not to
-      mention that the image required fine details in order to have the IP algorithm to process is correctly. </p>
-
-    <p> &nbsp;&nbsp;&nbsp;&nbsp; Another initial set back was the lack of storage on the Android device. Storing an image is expensive when considering the limited resources on the phone. And I decided to use external storage instead (i.e. a
-      database). The challenge with this was finding a way to send the bytes to the database in a way that did not result in lossy compression. However, as with the previous issue, the device will automatically do this when trying to pass data
-      around. </p>
-
-    <p> &nbsp;&nbsp;&nbsp;&nbsp; The next issue that came up occurred during the iOS development. While the quality of the images being produced were great there was still a need to send them to be processed by the Algorithm that was written in
-      Python. The actual issue here is that there would be a decent amount of latency when getting a response from the Algorithm because the computations were happenning on a difference maching. We did experiment with having all of the openCV code
-      on the app but this task was not tractable. </p>
-
-    <p> &nbsp;&nbsp;&nbsp;&nbsp; The final issue arose when trying to process the images from the Node.js server. There was a ton of work that went into resolving dependencies and setting up the environment so that the IP libraries were actually
-      being loaded into the python script. </p>
-
-
-    <h2>
-      Future Work:
-    </h2>
-
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; Although you likely could collect fingerprints from fingers other than thumbs
-      with the current software, the software has been optimized to work only with
-      thumbprints. If we were given more time, we would like to add this additional
-      functionality.
-    </p>
-
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp;     Also, as briefly mentioned earlier, we currently have no evaluation metric of fingerprint quality, and would likely have to consult an outside agency like NIST or use one of their quality assessment algorithms to do so. This would be another important future step
-      to take because, although we can often successfully collect thumbprints with the software, we currently have no understanding of whether the prints would be considered good or not.
-    </p>
-
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp;      Connected to assessing fingerprint quality, we would ultimately like to give users the ability to not only take fingerprints from their cellphones, but also then send the prints to a database to be checked for a
-      match. This was originally a key part of our application, but due to the difficulty involved with developing an iphone app without previous experience and developing a unique fingerprint extraction algorithm, we faced significant setbacks.
-    </p>
-
-    <p>
-      &nbsp;&nbsp;&nbsp;&nbsp; Lastly, given more time we would love to figure out how to get the iOS application to do all of the work that we have spread across the phone and the server. Ideally this would be an application that would do all of
-      the image processing instantly (or as quickly as possible).
-    </p>
-
-    <h2>
-      References:
-    </h2>
-    <a href="https://www.nist.gov/publications/nfiq-compliance-test"> [1] NIST Fingerprint Quality </a>
-    <br>
-    <br>
-    <a href="https://scikit-image.org/"> [2] Scikit-Image </a>
-    <br>
-    <br>
-    <a href="https://opencv.org/"> [3] OpenCV </a>
-    <br>
-    <br>
-    <a href="https://matplotlib.org/"> [4] Matplotlib </a>
-    <br>
-    <br>
-    <a href="https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf"> [5] https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf </a>
-    <br>
-    <br>
-    <a href="https://docs.swift.org/swift-book/"> Swift Programming Book</a>
-    <br>
-    <br>
-    <a href="https://developer.apple.com/documentation/avfoundation">AVFoundation</a>
-    <br>
-    <br>
-    <a href="https://www.raywenderlich.com/464-storyboards-tutorial-for-ios-part-1">XCode Story board Tutorial</a>
-    <br>
-    <br>
-    <a href="https://docs.swift.org/swift-book/LanguageGuide/ClassesAndStructures.html">Swift Classes and Strcutres</a>
-    <br>
-    <br>
-    <a href="https://codewithchris.com/xcode-tutorial/">XCode Tutorial</a>
-    <br>
-    <br>
-    <a href="https://zaiste.net/nodejs-child-process-spawn-exec-fork-async-await/">Running Python Process in Node Server</a>
-    <br>
-    <br>
+</h2>
+<br>
+<h2>
+  For Repository, <a href="https://github.com/epeake/quiccPrints"> Click Here </a>
+</h2>
+<br>
+<br>
+
+<div style="text-align: center;">
+  <img src="finger.jpeg" alt="Finger" style="width:700px;height:500px;">
+  <img src="print.jpg" alt="Print" style="width:350px;height:500px;">
+</div>
+
+<h2>
+  Introduction:
+</h2>
+
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; quiccPrints gives smartphone users the ability to take a photo of a thumb and convert it into a fingerprint image. We were initially motivated to pursue this project because of its useful applications to law
+  enforcement. Many fingerprinting devices are large and clunky, some even require an outlet. In-field police officers, however, often face life-or-death situations where it is out of the question to be held back by such a device, regardless of
+  its usefulness. If officers could quickly and easily scan fingerprints and check them in a database, they would be able to check for people's past criminal history without the need for non-biometric forms of identification. For simplicity, we
+  designed quiccPrints to only focus on capturing thumbprints, but we believe that our software could be easily expanded upon to include other fingers.
+</p>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; Although there have been new, more portable fingerprinting devices created to
+  satisfy this need, we thought it would be cool to give officers the same ability,
+  to fingerprint and check for criminals in a database, with only their cellphones.
+  We were especially drawn to creating this functionality with just a smartphone
+  because, in the modern day, officers are likely already carrying a smartphone.
+  Thus, adding this extra functionality to the smartphone gives them one less thing
+  to carry even if there are already more portable fingerprinting devices.
+</p>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; One thing that was consistently in the back of our minds throughout the project was that these fingerprints not only had to be extracted from photos, but extracted well enough from these photos so that they should
+  later be checked in a database. It is important to note that such an assessment of fingerprint quality is often measured by assessment algorithms developed by organizations like NIST (the National Institute of Standards and Technology) [1], so,
+  due to time constraints and
+  resources, we were unable to assess the prints' quality.
+</p>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; Due to the large volume of work involved in the project,
+  each member of our team was assigned a certain group of subtasks that would
+  countribute to our overall goal of extracting fingerprints. Because we were unable
+  to create a data base for our prints and to check for existing prints in the database
+  due to time constraints, we decided to, instead, output several statistics of interest
+  for each of our output fingerprints. Thus, the divided subtasks were as follows:
+  create a smartphone application to take the photos to be processed; devise an
+  algorithm that can take in photos and output fingerprint images; devise an
+  algorithm to determine several key statistics of each fingerprint.
+</p>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+</p>
+
+<h2>
+  Methods:
+</h2>
+
+<h3>
+  Terrance:
+</h3>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; My task was to implement feature extraction. In order words, finding a way to describe the content of the thumbprints that Elijah gave to me. Therefore, I read through different scholarly articles that discussed the
+  best ways to implement feature extraction. I primarily consulted this source for my research: <a href="https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf"> [5]</a>
+</p>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; For figures, taken from [5] unless otherwise specified, <a href="terrance_figures.pdf"> click here <a />. As I mentioned earlier, to complete this task, I first decided to conduct some research of my own to find the best
+    approach to take for feature extraction.
+    I read through different scholarly articles that discussed the best ways to implement feature extraction. Once I found a couple of different approaches, I began testing and implementing the different approaches using jupyter notebook. I
+    quickly realized that the Crossing Number Concept was the best algorithm to use. One reason I liked this algorithm is because the function was pretty straightforward to implement. It uses a 3x3 sliding window to scan the local neighborhood
+    (Figure 3). It performs this operation on the outside pixels and returns the value (Figure 4). I can use this chart (Figure 5) to determine what type of point (Figure 6) the center pixel represents. For my actual feature extraction function,
+    I decided to explicitly have variables to represent each position in the 3x3 sliding window because it made the function a lot easier to understand. It also made the operation performed on the outside neighbors clearer and easier to
+    understand because originally, I ran into a lot of problems trying to condense the size of the overall feature extraction method. I successfully implemented this Crossing Number Concept algorithm so that we can now use this algorithm to
+    output a new grayscale image, where the brighter pixels have higher CN values and darker pixels have lower CN values. As a result, we now know the locations of the different types of points. The algorithm I implemented also outputs the total
+    counts of each type of point that are in the given image. I also added a portion to this algorithm that outputs a color image instead of grayscale image where each different type of point represents a different color, so we can better see
+    the results from the algorithm. Since we modified the app so that we only have the top portion/actual thumbprint (Figure 2), I decided that we did not need to add a post-processing element to the algorithm. I stand firm with this decision
+    because now we are only performing operations on the actual thumbprint, instead of the other entire thumb with the extra noisy features (Figure 1). So now our results do not get interfered and we consistently get the same final total counts
+    of each type of point. The only libraries for this process that are used are skimage [2] and matplotlib [4].
+
+</p>
+
+<h3>
+  Elijah:
+</h3>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp;      When I originally started trying to extract a thumbprint for an image, I realized that I was faced with not only the task of extracting the thumbprint, but also cropping the image to the thumbprint. The latter
+  proved to be far more challenging. Before I could do anything, I needed to compile a database of people's fingerprints. To do so, I went to several of my friends and asked for their consent to take photos of their thumbs, which would be
+  anonymized, to improve a fingerprint detection algorithm. I made sure to not only collect fingerprints of students with a single shade of skin. I collected thumb photos from friends of all races, so that performance would not be biased to a
+  certain race. All photos were collected with the flash on at roughly the same distance because this lead to the best performance.
+</p>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp;      Once I collected the photos, to extract the fingerprint, all I needed to do was use local thresholding, with hyper-parameters tuned based its performance on several thumbprint photos. Local thresholding works by
+  thresholding an image based on luminosity values within a certain window instead of based on the entire image. This was helpful for extracting fingerprints because the peaks of the fingers tend to be brighter than the valleys. This way, if we
+  set all the values of the bright peaks to zero and all the values of the valley to one, we can get a fingerprint. The only thing that needed to be done after this point was to use a median filter to get rid of any noise residuals in the photo
+  (to clean up the image), and to use a mask to crop out everything in the photo except for the fingerprint (described below).
+</p>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp;      In order to make the mask, I first converted the image to grayscale, and used the mask overlaid on the app's preview screen to crop the image. Afterwards, I used histogram equalization to stretch out the
+  luminosity. I noticed that this emphasized the outline of the thumb, which made detecting the thumb region much easier. Afterwards, I used a heavy median filter to denoise the image while still maintaining the edges. Afterwards, we use another
+  local thresholding on this new smoothed image because I noticed that it helps separate the regions of the image. I did notice, however, that changing the hyper-parameters slightly changed the regions that would later be captured with a region
+  detector, as provided by skimage.measure [2]. Thus, I separated a series of locally thresholded images into several region separated images. I stored these labeled images in memory then came back to them later. In the meantime, I needed to
+  figure out a way to automatically choose the thumbprint region of these labeled images to make a mask with. In order to choose the region, I used six high frequency sign wave windows and convolved them with the original cropped image. I could
+  have used a Gabor filter, but I realized that having the sine wave contained to only a portion of the window to convolve with made it so that frequencies were less emphasized when we did the convolutions. That is, the output image was a much
+  more uniform gray. With these high frequency sign waves, however, the output convolved images all have bright patches around where the fingerprint was, where there was very high frequency. Thus, we made a separate image by taking the OR of all
+  of these convolved images which we then overlaid with each of our region images that was stored in memory. This way, we could then choose the region that contained the most bright pixels in the high frequency overlay image. That is, we choose
+  the region that has the highest spacial frequency, which should be the thumbprint, especially because everything that is not in the foreground gets a little blurred out. Therefore, we are able to successfully choose the region that contains a
+  thumb, regardless of a similarly colored background. After we have chosen each of these masks, we then overlaid them with one another to make a new mask using the OR operation, and then we used the binary closing operation to fill in any
+  holes. Finally, we use an erosion filter to tighten the mask to the thumb outline and we take to difference of the mask and our output fingerprint to crop it accordingly. To see images of the process, taken from our presentation, <a href="ipprocess.pdf">
+    click here </a>
+</p>
+
+<h3> Anthony: </h3>
+<p>Given that our project revolves around the use of mobile cameras, I decided that I would be using my personal Android device to develop the user interface and backend for the mobile app. I started the development process by designing the various
+  classes that were necessary to work with the Android's hardware. Since the device I was working on was an HTC One that was running an older SDK[12], I had to use a deprecated camera API. After designing the classes and the way that they would
+  interact with each other I began implementing the live camera preview (as would be standard on any camera app) and the view holder that would display the image captured.</p>
+
+<p>I had to consider that there was not a great deal of space on my Android device so I refrained from storing captured images. Given this consideration, I had to introduce external storage via a database. So, I used the built in support for
+  Firebase to hold onto images that would have otherwise been in the camera's memory.</p>
+
+<p>The last piece of the applicaiton lied in the method of sending the image. However, this is also where many issues arose in the Android version of the application. It turned out that the devices was attempting to compress the image, even though
+  it was not being stored in memory. The likely cause was that trying to send the image to the database was resulting in compression of the image, but when this happened the quality of the image became horrible. To combat this I did implement custom
+  settings for atuofocus but this did not help much.</p>
+
+<p>The previous issues lead to the creation of an iOS application. This was mostly because the hardware backing the iPhone camera API is much more powerful. I was not familiar with the iOS development workflow but when researching the common iOS
+  development practices, I found that it was nearly identical to the methodologies used in Android development. The biggest hurdle in taking on an iOS version of the application became the need to either learn Objective-C of Swift[6, 8, 9, 10]. I
+  found that Swift was far simpler to understand and was similar to JavaScript so I decided to rebuild the application using Swift and the XCode IDE[8, 10]. At this point the challenge became figuring out the various analogs of the custom camera
+  components, from the Android application, for the iOS application. Fortunately the documentation and other developer's questions on Stack Overflow helped me figure out how to meet our teams needs.</p>
+
+<p>The iOS application makes use of the, very flexible, AVFoundation framework [7]. There are other frameworks that are available for using the camera on an iOS device, but this one gave me the most control while not requiring me to write ridiculous
+  amounts of code for the functionality. I decided that the actual interface should be simple enough for anyone to be able to pick up the device and utilize the application. To make the processing of a caputred image easier I added an overlay to the
+  live preview for the application. The overlay is an outline of a generic thumb that is in bright green. There are two majors parts ot the interface: the first is the live preview and the second is the captured image preview. The live preview
+  consits of a button to actually capture the image. The image preview consists of two buttons that allow for sending the image to a server or returning to the previous view. Lastly, we decided to run a Node.js server that would recieve the images
+  from the phone and process them by running python scripts[11]. This was done to make our lives a little easier (having all of the funcitonality on the phone would have been very complicated) but also because of the simplicity that goes behind
+  creating an express application.</p>
+
+<p>The workflow is shown best in the following diagram:</p>
+
+<div style="text-align: center;">
+  <img src="quiccPrintsFlow.PNG">
+</div>
+
+<h2>
+  Results:
+</h2>
+
+<h3>
+  Terrance:
+</h3>
+<p>
+  For results, <a href="terrance_results.pdf"> click here. </a>
+</p>
+
+<h3>
+  Elijah:
+</h3>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; I would say that in the end, the algorithm tends to perform well. One thing that I was really happy with is the fact that the algorithm tends to be able to correctly extract the thumbprint and create a nice mask so
+  that we only output the thumbprint regardless of similar backgrounds around the thumb. You can see an example of what I mean at the top of the page. Regardless of the similar background surrounding the thumb, we are able to extract only the
+  thumb's print. This is thanks to the fact that we are taking into account spatial frequency, not just luminosity values when we are trying to find the thumb. As said earlier, we use sine waves and convolutions to detect regions of high spatial
+  frequency (like a fingerprint), and use that to distinguish where the thumb is. Unfortunately, most often the algorithm will also take a print of parts of the thumb that not considered a thumbprint. For example, the algorithm will often notice
+  the high frequencies of the base of the thumb and turn that into a finger print as well as, or sometimes instead of the thumbprint. For an example of this, see Terrance's <a href="terrance_figures.pdf"> Figure 1. <a />
+</p>
+
+<h3>Anthony:</h3>
+
+<div style="text-align: center;">
+  <img src="iPhonePrevPNG.PNG">
+</div>
+
+<p>The images above consist of the the interface for the live preview and the output of hitting the capture button. The image on the far right demonstrates the statistical analysis of the print that was taken.</p>
+
+<h4>For detailed instructions on how to set up app on your own please contact aturcios@middlebury.edu.</h4>
+
+<h2>
+  Schedule:
+</h2>
+
+<h3>
+  Elijah:
+</h3>
+
+<h4>
+  Original Schedule:
+</h4>
+
+<ul>
+  <strong> Week 5 -- 10/9 </strong>
+  <li> Begin developing the edge detection that will be needed for the project (using various IP libraries). </li>
+  <li> Research what technologies will make the edge detection most effective given constraints of input images. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 6 -- 10/16 </strong>
+  <li> Optimize edge detection algorithm and conversion to binary image. </li>
+  <li> Give group update on progress. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 7 -- 10/23 </strong>
+  <li> Begin integrating algorithm with application being built. </li>
+  <li> Help Terrance with feature extraction and classification algorithm building. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 8 -- 10/30 </strong>
+  <li> Tie any loose ends. </li>
+  <li> Evaluate where the project is at this point and decide (as a team) viable options for extending the project in time for the final presentation. </li>
+  <li> 3MT presentation and report. </li>
+</ul>
+
+<h4>
+  Actual Schedule:
+</h4>
+
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; Task wise, I followed the original schedule closely; timeline wise, I did not. I am very fortunate that we gave ourselves a several week pad at the end of the project timeline to close any loose ends. I lost a good
+  deal of time trying to translate all my work into Objective-C++ so that we could integrate my OpenCV [3] code into the iphone app, but we never actually ended up integrating all the code because we realize it cost too much time. Although it
+  would have been nice to have all the image processing done locally, having all the code run on an external server proved easiest task. It was especially helpful because throughout the process, I ended up changing my algorithm a lot. C++,
+  however, is not the best language for prototyping, so I would prototype in Python, then translate to C++. Additionally, with C++ I could not use the skimage [2] library, which I ended up using extensively.
+</p>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; Aside from this issue, I also ended up spending a lot of time just developing
+  my algorithm. I spent countless hours just playing around with all the tools
+  that we learned in class, like blurring, histogram equalization, edge detection,
+  masking, etc. Although I originally planned on finishing the algorithm in the first
+  two weeks, it ended up taking the entire ~6 weeks to complete. Part of the
+  reason it took so long was because as we progressed through the course, I kept
+  learning new tools that I wanted to integrate with the algorithm to make it
+  more robust.
+</p>
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; A last thing to note is that I never actually helped out
+  Terrance with his feature extraction task because I became too bogged down with my
+  own tasks. Overall, this reflects the our work flow throughout the whole
+  development process: we made ambitious goals at the start, did not complete
+  everything we originally wanted too, but kept reassessing goals along the way and
+  in the end we ended up creating software that I am proud of.
+</p>
+
+
+<h3>
+  Terrance:
+</h3>
+
+<h4>
+  Original Schedule:
+</h4>
+
+
+<ul>
+  <strong> Week 6 -- 10/16 </strong>
+  <li> Begin researching what makes a thumbprint unique to determine features to be extracted from our thumbprints. </li>
+  <li> Testing on a fingerprint taken by Elijah or on one found online, begin implementing feature extraction. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 7 -- 10/23 </strong>
+  <li> Continue working on feature extraction and start thinking about what classification algorithm we might want to use, given our set of features. </li>
+  <li> Implement a quick and dirty version of the classification algorithm. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 8 -- 10/30 </strong>
+  <li> Optimize the algorithm (time permitting). </li>
+  <li> Integrate with Anthony’s app. </li>
+  <li> 3MT presentation and report. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<h4>
+  Actual Schedule:
+</h4>
+
+<ul>
+  <strong> Week 6 -- 10/16 </strong>
+  <li> I did not work on the project.
+</ul>
+
+<ul>
+  <strong> Week 7 -- 10/23 </strong>
+  <li> I began researching what makes a thumbprint unique to determine features to be extracted from our thumbprints. </li>
+  <li> I began experimenting the feature extraction methods in scholarly articles with the the thumbprints that Elijah gave me. </li>
+</ul>
+
+<ul>
+  <strong> Week 8 -- 10/30 </strong>
+  <li> I successfully implemented the feature extraction algorithm using the Crossing Number Concept. </li>
+  <li> It outputted the image with new grayscale image, where the brighter pixels have higher CN values and darker pixels have lower CN values. </li>
+</ul>
+
+<ul>
+  <strong> Week 9 -- 11/7 </strong>
+  <li> I added a portion to this algorithm that outputs a color image instead of grayscale image where each different type of point represents a different color, so we can better see the results from the algorithm. </li>
+  <li> I started working on making the algorithm more efficient. </li>
+</ul>
+
+<ul>
+  <strong> Week 10 – 11/11 </strong>
+  <li> I came up the faster function that extracted features, printed the statistics, show the different images. </li>
+  <li> With the help of Anthony and Elijah, we began integrating my code with Anthony’s app. </li>
+</ul>
+
+<ul>
+  <strong> Week 11 – 11/18 </strong>
+  <li> THANKSGIVING BREAK (so I did not work on the project). </li>
+</ul>
+
+<ul>
+  <strong> Week 12 – 11/25 </strong>
+  <li> I helped Anthony and Elijah send the image to our server. </li>
+</ul>
+
+<ul>
+  <strong> Week 13 – 12/2 </strong>
+  <li> I worked with Anthony and Elijah to finish last minute touches in order to get ready for the presentation. </li>
+  <li> We presented our semester long results to the class. </li>
+</ul>
+
+<ul>
+  <strong> Week 14 – 12/9 </strong>
+  <li> I worked with Anthony and Elijah to clean up the draft report. </li>
+  <li> We submited our final code and report. </li>
+</ul>
+
+<h3>
+  Anthony:
+</h3>
+<h4>Original</h4>
+<ul>
+  <strong> Week 5 -- 10/9 </strong>
+  <li> Begin researching handling camera usage and developing Android mobile application. </li>
+  <li> Research Swift development to (possibly) use better camera quality on iOS devices.</li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 6 -- 10/16 </strong>
+  <li> Set up the environment for taking photos (Android). </li>
+  <li> Look into camera and internet permissions for Android devices. </li>
+  <li> Successfully get the phone to at least take an image and send to computer (any of ours). </li>
+  <li> (Possibly) Get the image to be sent to a DB? </li>
+  <li> Begin researching how camera can force user to take image of thumb within a thumb outline. </li>
+  <li> Like cashing a check via bank app. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 7 -- 10/23 </strong>
+  <li> Begin to implement a way of forcing the user to place their thumb into certain region. </li>
+  <li> Consider using flash to get this done. </li>
+  <li> Possibly go through current code and refactor where applicable. </li>
+  <li> Work on formal project progress report (due the following week). </li>
+  <li> This includes the 3MT. </li>
+</ul>
+
+<ul>
+  <strong> Week 8 -- 10/30 </strong>
+  <li> 3MT presentation and report. </li>
+  <li> Check in with team on next steps for project depending on how much has gotten done. </li>
+</ul>
+
+
+<h4>Actual</h4>
+
+<ul>
+  <strong> Week 5 -- 10/9 </strong>
+  <li> Did research on the Android camera API and the components necessary to work with images. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 6 -- 10/16 </strong>
+  <li> Used Android Studio IDE to develop </li>
+  <li> Looked into permissions that were required to use camera on Android. </li>
+  <li> Able to get the phone to at least take an image . </li>
+  <li> Researched methods to achieve an overlay. </li>
+  <li> Progress report to the team. </li>
+</ul>
+
+<ul>
+  <strong> Week 7 -- 10/23 </strong>
+  <li> Attempted to fix quality of output images. </li>
+  <li> Implemented DB to store images in place of internal phone storage. </li>
+  <li> Worked on formal project progress report (due the following week) and 3MT. </li>
+</ul>
+
+<ul>
+  <strong> Week 8 -- 10/30 </strong>
+  <li> 3MT presentation and report. </li>
+  <li> Decided with team to implement an iOS application instead. </li>
+  <li> Began looking into Swift tutorials and setting up XCode environment. </li>
+</ul>
+
+<ul>
+  <strong> Week 9 -- 11/6 </strong>
+  <li> Began implementing custom camera application using AVFoundation framework. </li>
+  <li> Layed out the user interface on the XCode Story board. </li>
+</ul>
+
+<ul>
+  <strong> Week 10 -- 11/13 </strong>
+  <li>Did not work on the project :(</li>
+</ul>
+
+<ul>
+  <strong> Week 11 -- 11/20 </strong>
+  <li>Started looking into running Python Scripts from Node server</li>
+</ul>
+
+<ul>
+  <strong> Week 12 -- 11/27 </strong>
+  <li>Put app together and practice for presentations</li>
+</ul>
+
+<ul>
+  <strong> Week 13 -- 12/4 </strong>
+  <li>Rockstar presentation</li>
+</ul>
+
+<ul>
+  <strong> Week 14 -- 12/4 </strong>
+  <li>Finish report</li>
+</ul>
+
+<h2>
+  Issues:
+</h2>
+
+<h3>
+  Terrance:
+</h3>
+
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; In the beginning, when we first divided up the work amongst the three of us. I was originally tasked with coming up with object detection. After a few days and feelings of frustration, we decided that we did not need
+  object detection, since the app was going to take a square image centered around the thumb in the middle. This did not affect my schedule too much since this happened very early on in the semester. Additionally, when I was first trying to
+  implement feature extraction, I ran into a problem when it was trying to thin the image. I needed to thin the image because it erodes away the foreground pixels until they are one pixel wide. It creates a skeleton image that the feature
+  extraction algorithm needs as input to run properly. Initially I did not know how to thin a thumbprint, so I did some research to learn how to actually thin an image. I eventually noticed that under skimage morphology there is a thin operation
+  that
+  outputs the desired skeleton image and I began using that operation to output the thinned thumbprint images. Luckily, it only took me a few days to find this solution. Unfortunately, I later ran into another problem when I was trying make my
+  feature extraction algorithm run faster because at the time, I had separate functions for extracting features, printing the statistics and showing the cool color images. I was able to fix this by having one function that to complete all these
+  tasks. This function has parameters so that the user can input either true or false if they want certain options such as printing the statistics or showing the color images that represents the different types of points.
+</p>
+
+<h3>
+  Elijah:
+</h3>
+
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp;      As said before, we ran into several issues trying to convert the python code into Objective-C++ to be integrated into the application. In the end, as said before, we ended up abandoning ship and just sending all
+  the code to be processes on an external server with Python so that I did not hav to keep translating my code between languages. Also, implementation wise, I would say that I experienced my most significant issues trying to automatically crop
+  the images taken by the phone to just include the thumb. This would have likely been much easier to do with a CNN, but given that we did not have a massive dataset of thumbs with boxes around them, I resorted to image processing techniques. In
+  the end, my efforts proved unsuccessful. To get around the cropping issue, we added a box on the camera preview for people to stick their thumbs into before the photo was taken. This way we could just crop around the box and not have to worry
+  about the thumb's location in the image. Also, as said earlier, we still have the issue where we sometimes do not correctly identify a thumb region and instead will think that the base of a thumb should be included in the thumbprint because of
+  its high frequency. This, however, I think is expected, that the algorithm is imperfect, because it is extremely difficult to generalize such an algorithm without extensive training data or the help of more modern methods of machine learning.
+  Lastly, I would also say that the last issue that I want to highlight is the issue of time. Our project was incredibly ambitious so the entire time we definitely felt a strong time crunch.
+</p>
+
+<h3>Anthony</h3>
+
+<p>The biggest issue that I ran into occurred in the first few stages of testing the Android Application. When the app was fully built I attempted to collect images of various objects around me and I found that the quality of the image being sent to
+  the preview layer of the application was horrible. There were a few adjustments that I made to the autofocusing but android really tries to compress images. Interestingly enough the methods used by the Android architecture to compress data is how
+  they are able to keep the phones relatively inexpensive. Regardless this was an issue for our project and there was too much information being lost when attempting to capture an image. Not to mention that the image required fine details in order
+  to have the IP algorithm to process is correctly.</p>
+
+<p>Another initial set back was the lack of storage on the Android device. Storing an image is expensive when considering the limited resources on the phone. And I decided to use external storage instead (i.e. a database). The challenge with this
+  was finding a way to send the bytes to the database that did not result in lossy compression. However, as with the previous issue, the device will automatically do this when trying to pass data around.</p>
+
+<p>The next issue that came up occurred during the iOS development. While the quality of the images being produced were great there was still a need to send them to be processed by the Algorithm that was written in Python. The actual issue here is
+  that there would be a decent amount of latency when getting a response from the Algorithm because the computations were happenning on a difference maching. We did experiment with having all of the openCV code on the app but this task was not
+  tractable.</p>
+
+<p>The final issue arose when trying to process the images from the Node.js server. There was a ton of work that went into resolving dependencies and setting up the environment so that the IP libraries were actually being loaded into the python
+  script. For the longest time our server was not able to run these scripts.</p>
+
+
+
+<h2>
+  Future Work:
+</h2>
+
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; Although you likely could collect fingerprints from fingers other than thumbs
+  with the current software, the software has been optimized to work only with
+  thumbprints. If we were given more time, we would like to add this additional
+  functionality.
+</p>
+
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp;     Also, as briefly mentioned earlier, we currently have no evaluation metric of fingerprint quality, and would likely have to consult an outside agency like NIST or use one of their quality assessment algorithms to do
+  so. This would be another important future step
+  to take because, although we can often successfully collect thumbprints with the software, we currently have no understanding of whether the prints would be considered good or not.
+</p>
+
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp;      Connected to assessing fingerprint quality, we would ultimately like to give users the ability to not only take fingerprints from their cellphones, but also then send the prints to a database to be checked for a
+  match. This was originally a key part of our application, but due to the difficulty involved with developing an iphone app without previous experience and developing a unique fingerprint extraction algorithm, we faced significant setbacks.
+</p>
+
+<p>
+  &nbsp;&nbsp;&nbsp;&nbsp; Lastly, given more time we would love to figure out how to get the iOS application to do all of the work that we have spread across the phone and the server. Ideally this would be an application that would do all of
+  the image processing instantly (or as quickly as possible).
+</p>
+
+<h2>
+  References:
+</h2>
+<a href="https://www.nist.gov/publications/nfiq-compliance-test"> [1] NIST Fingerprint Quality </a>
+<br>
+<br>
+<a href="https://scikit-image.org/"> [2] Scikit-Image </a>
+<br>
+<br>
+<a href="https://opencv.org/"> [3] OpenCV </a>
+<br>
+<br>
+<a href="https://matplotlib.org/"> [4] Matplotlib </a>
+<br>
+<br>
+<a href="https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf"> [5] https://pdfs.semanticscholar.org/49ad/2473ecc1dcbfdfc9a981f5191a1224107ef1.pdf </a>
+<br>
+<br>
+<a href="https://docs.swift.org/swift-book/">[6]Swift Programming Book</a>
+<br>
+<br>
+<a href="https://developer.apple.com/documentation/avfoundation">[7]AVFoundation</a>
+<br>
+<br>
+<a href="https://www.raywenderlich.com/464-storyboards-tutorial-for-ios-part-1">[8]XCode Story board Tutorial</a>
+<br>
+<br>
+<a href="https://docs.swift.org/swift-book/LanguageGuide/ClassesAndStructures.html">[9]Swift Classes and Strcutres</a>
+<br>
+<br>
+<a href="https://codewithchris.com/xcode-tutorial/">[10]XCode Tutorial</a>
+<br>
+<br>
+<a href="https://zaiste.net/nodejs-child-process-spawn-exec-fork-async-await/">[11]Running Python Process in Node Server</a>
+<br>
+<br>
+<a href="https://developer.android.com/about/versions/android-4.0">[12]Ice Cream Sandwich</a>
+<br>
+<br>
 
 </html>
